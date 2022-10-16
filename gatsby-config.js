@@ -88,7 +88,7 @@ module.exports = {
         },
         googleAds: {
           // The property ID; the tracking code won't be generated without it.
-          trackingId: null,
+          trackingId: 'ca-pub-7145772846945296',
           // Setting this parameter is optional
           anonymize: true, // <--- default
           // Name of the cookie, that enables the tracking if it is true
