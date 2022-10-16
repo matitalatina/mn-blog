@@ -23,6 +23,7 @@ import config from '../website-config';
 import { AuthorList } from '../components/AuthorList';
 import { SponsorCall } from '../components/sponsor/SponsorCall';
 import { ShareButtons } from '../components/social/ShareBtns';
+import { AdsInArticle } from '../components/ads/AdsInArticle';
 
 export interface Author {
   id: string;
@@ -233,7 +234,6 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
                 </PostFullImage>
               )}
               <PostContent htmlAst={post.htmlAst} />
-
               <ShareButtons
                 title={`Davvero interessante! 👇\n${post.frontmatter.title}`}
                 subject="Ho trovato questo articolo online"

@@ -3,9 +3,12 @@ import CookieConsent from 'react-cookie-consent';
 import Cookies from 'js-cookie';
 
 const buttonStyle = { borderRadius: '5px' };
-const gdprAnalyticsCookieKey = 'gdpr-analytics-enabled';
+
+export const gdprAnalyticsCookieKey = 'gdpr-analytics-enabled';
+export const gdprAdsCookieKey = 'gdpr-marketing-enabled';
+
 const onAccept = () => {
-  [gdprAnalyticsCookieKey, 'gdpr-marketing-enabled']
+  [gdprAnalyticsCookieKey, gdprAdsCookieKey]
     .forEach(key => Cookies.set(key, 'true', { expires: 365, path: '/' }));
   (window as any).trackGoogleAnalytics();
   (window as any).trackGoogleAds();
