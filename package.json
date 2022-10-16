@@ -1,9 +1,9 @@
 {
-  "name": "gatsby-casper",
-  "description": "Casper for gatsby",
+  "name": "mn-blog",
+  "description": "Mattia Natali's blog (italian)",
   "version": "0.0.0",
   "private": true,
-  "author": "Scott Cooper <scttcper@gmail.com>",
+  "author": "Mattia Natali",
   "license": "MIT",
   "scripts": {
     "build": "gatsby build",
@@ -25,6 +25,7 @@
     "gatsby-plugin-canonical-urls": "2.6.0",
     "gatsby-plugin-emotion": "5.0.0",
     "gatsby-plugin-feed": "2.9.0",
+    "gatsby-plugin-gdpr-tracking": "^1.2.2",
     "gatsby-plugin-global-styles": "^1.0.17",
     "gatsby-plugin-google-analytics": "2.7.0",
     "gatsby-plugin-postcss": "3.3.0",
@@ -43,6 +44,7 @@
     "gatsby-transformer-remark": "2.12.0",
     "gatsby-transformer-sharp": "2.8.0",
     "gatsby-transformer-yaml": "2.7.0",
+    "js-cookie": "^3.0.1",
     "lodash": "4.17.20",
     "normalize.css": "8.0.1",
     "polished": "4.0.5",
@@ -50,6 +52,7 @@
     "prism-themes": "1.5.0",
     "prismjs": "1.22.0",
     "react": "17.0.1",
+    "react-cookie-consent": "^8.0.1",
     "react-dom": "17.0.1",
     "react-emotion": "10.0.0",
     "react-helmet": "6.1.0",
@@ -57,6 +60,7 @@
     "rehype-react": "6.1.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.2",
     "@types/lodash": "4.14.165",
     "@types/node": "14.14.13",
     "@types/react": "17.0.0",

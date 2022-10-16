@@ -45,7 +45,7 @@ module.exports = {
             options: {
               maxWidth: 2000,
               quality: 90,
-              backgroundColor: `none`,
+              backgroundColor: 'none',
             },
           },
         ],
@@ -71,21 +71,32 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-google-analytics',
+      resolve: 'gatsby-plugin-gdpr-tracking',
       options: {
-        trackingId: 'UA-81893752-1',
-        // Puts tracking script in the head instead of the body
-        head: true,
-        // IP anonymization for GDPR compliance
-        anonymize: true,
-        // Disable analytics for users with `Do Not Track` enabled
-        respectDNT: true,
-        // Avoids sending pageview hits from custom paths
-        exclude: ['/preview/**'],
-        // Specifies what percentage of users should be tracked
-        sampleRate: 100,
-        // Determines how often site speed tracking beacons will be sent
-        siteSpeedSampleRate: 10,
+        // logging to the console, if debug is true
+        debug: false,
+        googleAnalytics: {
+          // The property ID; the tracking code won't be generated without it.
+          trackingId: 'UA-81893752-1',
+          // Defines it google analytics should be started with out the cookie consent
+          autoStart: false, // <--- default
+          // Setting this parameter is optional
+          anonymize: true, // <--- default
+          // Name of the cookie, that enables the tracking if it is true
+          controlCookieName: 'gdpr-analytics-enabled', // <--- default
+          cookieFlags: 'secure;samesite=none', // <--- default
+        },
+        googleAds: {
+          // The property ID; the tracking code won't be generated without it.
+          trackingId: null,
+          // Setting this parameter is optional
+          anonymize: true, // <--- default
+          // Name of the cookie, that enables the tracking if it is true
+          controlCookieName: 'gdpr-marketing-enabled', // <--- default
+          cookieFlags: 'secure;samesite=none', // <--- default
+        },
+        // Defines the environments where the tracking should be available  - default is ["production"]
+        environments: ['production', 'development'],
       },
     },
   ],
