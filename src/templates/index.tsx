@@ -89,6 +89,10 @@ const IndexPage: React.FC<IndexProps> = props => {
         )}
         <meta property="og:image:width" content={width.toString()} />
         <meta property="og:image:height" content={height.toString()} />
+        <script
+          async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7145772846945296"
+          crossOrigin="anonymous"
+        />
       </Helmet>
       <Wrapper>
         <div
@@ -98,7 +102,7 @@ const IndexPage: React.FC<IndexProps> = props => {
             backgroundImage: `url('${props.data.header.childImageSharp.fixed.src}')`,
           }}
         >
-          <div css={SiteHeaderDim}></div>
+          <div css={SiteHeaderDim} />
           <div css={inner}>
             <SiteNav isHome />
             <SiteHeaderContent className="site-header-conent">
@@ -110,8 +114,8 @@ const IndexPage: React.FC<IndexProps> = props => {
                     alt={config.title}
                   />
                 ) : (
-                    config.title
-                  )}
+                  config.title
+                )}
               </SiteTitle>
               <SiteDescription>{config.description}</SiteDescription>
             </SiteHeaderContent>
