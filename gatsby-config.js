@@ -2,6 +2,9 @@
 const path = require('path');
 
 module.exports = {
+  flags: {
+    DEV_SSR: true,
+  },
   siteMetadata: {
     title: 'Mattia Natali',
     description: 'Il mio blog personale',
