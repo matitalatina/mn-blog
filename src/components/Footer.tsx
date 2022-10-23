@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
           )}
         </section>
         <SiteFooterNav>
-        <Link to="/">Ultimi Articoli</Link>
+          <Link to="/">Ultimi Articoli</Link>
           {config.linkedin && (
             <a href={config.linkedin} target="_blank" rel="noopener noreferrer">
               LinkedIn

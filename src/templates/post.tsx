@@ -23,10 +23,10 @@ import config from '../website-config';
 import { AuthorList } from '../components/AuthorList';
 import { SponsorCall } from '../components/sponsor/SponsorCall';
 import { ShareButtons } from '../components/social/ShareBtns';
-import { AdsInArticle } from '../components/ads/AdsInArticle';
 
 export interface Author {
   id: string;
+  name: string;
   bio: string;
   avatar: {
     children: Array<{
@@ -73,6 +73,7 @@ interface PageTemplateProps {
           };
           fields: {
             slug: string;
+            timeToRead: number;
           };
         };
       }>;
@@ -86,9 +87,9 @@ interface PageTemplateProps {
 
 export interface PageContext {
   excerpt: string;
-  timeToRead: number;
   fields: {
     slug: string;
+    timeToRead: number;
   };
   frontmatter: {
     image: {
@@ -206,8 +207,8 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
                     <section className="post-full-byline-meta">
                       <h4 className="author-name">
                         {post.frontmatter.author.map(author => (
-                          <Link key={author.id} to={`/author/${_.kebabCase(author.id)}/`}>
-                            {author.id}
+                          <Link key={author.name} to={`/author/${_.kebabCase(author.name)}/`}>
+                            {author.name}
                           </Link>
                         ))}
                       </h4>
@@ -458,7 +459,7 @@ export const query = graphql`
     markdownRemark(fields: { slug: { eq: $slug } }) {
       html
       htmlAst
-      excerpt
+      excerpt(format: PLAIN)
       timeToRead
       frontmatter {
         title
@@ -474,7 +475,7 @@ export const query = graphql`
           }
         }
         author {
-          id
+          name
           bio
           avatar {
             children {
@@ -498,7 +499,7 @@ export const query = graphql`
         node {
           id
           timeToRead
-          excerpt
+          excerpt(format: PLAIN)
           frontmatter {
             title
             date

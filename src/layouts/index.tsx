@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Global, css } from '@emotion/react';
 import { lighten } from 'polished';
 
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import favicon from '../../src/favicon.png';
 import { colors } from '../styles/colors';
@@ -11,6 +11,7 @@ import { MyCookieConsent } from '../components/gdpr/MyCookieConsent';
 
 interface IndexProps {
   className?: string;
+  children: React.ReactNode;
 }
 
 const IndexLayout: React.FC<IndexProps> = props => {

@@ -92,16 +92,16 @@ class SiteNav extends React.Component<SiteNavProps, SiteNavState> {
             <SiteNavContent css={[this.state.showTitle ? HideNav : '']}>
               <ul css={NavStyles} role="menu">
                 {/* TODO: mark current nav item - add class nav-current */}
-                <li role="menuitem">
+                <li key="home" role="menuitem">
                   <Link to="/">Home</Link>
                 </li>
-                <li role="menuitem">
+                <li key="dev" role="menuitem">
                   <Link to="/tags/dev/">Dev</Link>
                 </li>
-                <li role="menuitem">
+                <li key="how-to" role="menuitem">
                   <Link to="/tags/how-to/">How-to</Link>
                 </li>
-                <li role="menuitem">
+                <li key="web-en" role="menuitem">
                   <a href="https://blog.mattianatali.dev" target="_blank">English</a>
                 </li>
               </ul>
@@ -114,28 +114,28 @@ class SiteNav extends React.Component<SiteNavProps, SiteNavState> {
           </SiteNavLeft>
           <SiteNavRight>
             <SocialLinks>
-            {config.linkedin && (
-              <a
-                css={SocialLink}
-                href={config.linkedin}
-                target="_blank"
-                title="LinkedIn"
-                rel="noopener noreferrer"
-              >
-                <LinkedIn />
-              </a>
-            )}
-            {config.github && (
-              <a
-                css={SocialLink}
-                href={config.github}
-                target="_blank"
-                title="GitHub"
-                rel="noopener noreferrer"
-              >
-                <GitHub />
-              </a>
-            )}
+              {config.linkedin && (
+                <a
+                  css={SocialLink}
+                  href={config.linkedin}
+                  target="_blank"
+                  title="LinkedIn"
+                  rel="noopener noreferrer"
+                >
+                  <LinkedIn />
+                </a>
+              )}
+              {config.github && (
+                <a
+                  css={SocialLink}
+                  href={config.github}
+                  target="_blank"
+                  title="GitHub"
+                  rel="noopener noreferrer"
+                >
+                  <GitHub />
+                </a>
+              )}
               {config.facebook && (
                 <a
                   className="social-link-fb"

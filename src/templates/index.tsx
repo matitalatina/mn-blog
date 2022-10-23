@@ -28,6 +28,7 @@ import config from '../website-config';
 import { PageContext } from './post';
 
 export interface IndexProps {
+  children: React.ReactNode;
   pageContext: {
     currentPage: number;
     numPages: number;
@@ -192,7 +193,7 @@ export const pageQuery = graphql`
               }
             }
             author {
-              id
+              name
               bio
               avatar {
                 children {
@@ -205,7 +206,7 @@ export const pageQuery = graphql`
               }
             }
           }
-          excerpt
+          excerpt(format: PLAIN)
           fields {
             layout
             slug

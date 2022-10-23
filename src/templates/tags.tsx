@@ -156,7 +156,7 @@ export const pageQuery = graphql`
       totalCount
       edges {
         node {
-          excerpt
+          excerpt(format: PLAIN)
           timeToRead
           frontmatter {
             title
@@ -171,7 +171,7 @@ export const pageQuery = graphql`
               }
             }
             author {
-              id
+              name
               bio
               avatar {
                 children {
