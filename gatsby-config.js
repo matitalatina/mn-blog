@@ -62,6 +62,8 @@ module.exports = {
     },
     'gatsby-plugin-typescript',
     'gatsby-plugin-emotion',
+    `gatsby-plugin-image`,
+    `gatsby-plugin-sharp`,
     'gatsby-transformer-sharp',
     'gatsby-plugin-react-helmet',
     'gatsby-transformer-yaml',

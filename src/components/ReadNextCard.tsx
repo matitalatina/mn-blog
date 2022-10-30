@@ -15,6 +15,7 @@ export interface ReadNextProps {
     totalCount: number;
     edges: Array<{
       node: {
+        timeToRead: number;
         frontmatter: {
           title: string;
           date: string;

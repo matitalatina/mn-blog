@@ -1,6 +1,6 @@
 import { graphql } from 'gatsby';
 import React from 'react';
-import { FluidObject } from 'gatsby-image';
+import { getSrc, IGatsbyImageData } from "gatsby-plugin-image";
 
 import { Footer } from '../components/Footer';
 import SiteNav from '../components/header/SiteNav';
@@ -35,10 +35,11 @@ interface TagTemplateProps {
       edges: Array<{
         node: {
           id: string;
+          name: string;
           description: string;
           image?: {
             childImageSharp: {
-              fluid: FluidObject;
+              gatsbyImageData: IGatsbyImageData;
             };
           };
         };
@@ -57,7 +58,7 @@ const Tags = ({ pageContext, data, location }: TagTemplateProps) => {
   const tag = pageContext.tag ? pageContext.tag : '';
   const { edges, totalCount } = data.allMarkdownRemark;
   const tagData = data.allTagYaml.edges.find(
-    n => n.node.id.toLowerCase() === tag.toLowerCase(),
+    n => n.node.name.toLowerCase() === tag.toLowerCase(),
   );
 
   return (
@@ -95,7 +96,7 @@ const Tags = ({ pageContext, data, location }: TagTemplateProps) => {
           </div>
           <ResponsiveHeaderBackground
             css={[outer, SiteHeaderBackground]}
-            backgroundImage={tagData?.node?.image?.childImageSharp?.fluid?.src}
+            backgroundImage={tagData?.node?.image?.childImageSharp?.gatsbyImageData ? getSrc(tagData?.node?.image?.childImageSharp?.gatsbyImageData) : undefined}
             className="site-header-background"
           >
             <SiteHeaderContent css={inner} className="site-header-content">
@@ -131,65 +132,59 @@ const Tags = ({ pageContext, data, location }: TagTemplateProps) => {
 
 export default Tags;
 
-export const pageQuery = graphql`
-  query($tag: String) {
-    allTagYaml {
-      edges {
-        node {
-          id
-          description
-          image {
-            childImageSharp {
-              fluid(maxWidth: 3720) {
-                ...GatsbyImageSharpFluid
-              }
-            }
-          }
-        }
-      }
-    }
-    allMarkdownRemark(
-      limit: 2000
-      sort: { fields: [frontmatter___date], order: DESC }
-      filter: { frontmatter: { tags: { in: [$tag] }, draft: { ne: true } } }
-    ) {
-      totalCount
-      edges {
-        node {
-          excerpt(format: PLAIN)
-          timeToRead
-          frontmatter {
-            title
-            excerpt
-            tags
-            date
-            image {
-              childImageSharp {
-                fluid(maxWidth: 1240) {
-                  ...GatsbyImageSharpFluid
-                }
-              }
-            }
-            author {
-              name
-              bio
-              avatar {
-                children {
-                  ... on ImageSharp {
-                    fluid(quality: 100, srcSetBreakpoints: [40, 80, 120]) {
-                      ...GatsbyImageSharpFluid
-                    }
-                  }
-                }
-              }
-            }
-          }
-          fields {
-            layout
-            slug
+export const pageQuery = graphql`query ($tag: String) {
+  allTagYaml {
+    edges {
+      node {
+        id
+        name
+        description
+        image {
+          childImageSharp {
+            gatsbyImageData(layout: FULL_WIDTH)
           }
         }
       }
     }
   }
+  allMarkdownRemark(
+    limit: 2000
+    sort: {fields: [frontmatter___date], order: DESC}
+    filter: {frontmatter: {tags: {in: [$tag]}, draft: {ne: true}}}
+  ) {
+    totalCount
+    edges {
+      node {
+        excerpt(format: PLAIN)
+        timeToRead
+        frontmatter {
+          title
+          excerpt
+          tags
+          date
+          image {
+            childImageSharp {
+              gatsbyImageData(layout: FULL_WIDTH)
+            }
+          }
+          author {
+            name
+            bio
+            avatar {
+              children {
+                ... on ImageSharp {
+                  gatsbyImageData(layout: FULL_WIDTH)
+                }
+              }
+            }
+          }
+        }
+        fields {
+          layout
+          slug
+        }
+      }
+    }
+  }
+}
 `;

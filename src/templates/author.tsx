@@ -2,7 +2,7 @@ import { graphql } from 'gatsby';
 import React from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { FluidObject } from 'gatsby-image';
+import { GatsbyImage, getSrc, IGatsbyImageData } from "gatsby-plugin-image";
 
 import { Footer } from '../components/Footer';
 import SiteNav from '../components/header/SiteNav';
@@ -32,7 +32,7 @@ interface AuthorTemplateProps {
   data: {
     logo: {
       childImageSharp: {
-        fluid: any;
+        gatsbyImageData: IGatsbyImageData;
       };
     };
     allMarkdownRemark: {
@@ -50,13 +50,13 @@ interface AuthorTemplateProps {
       location?: string;
       profile_image?: {
         childImageSharp: {
-          fluid: FluidObject;
+          gatsbyImageData: IGatsbyImageData;
         };
       };
       bio?: string;
       avatar: {
         childImageSharp: {
-          fluid: FluidObject;
+          gatsbyImageData: IGatsbyImageData;
         };
       };
     };
@@ -122,7 +122,7 @@ const Author = ({ data, location }: AuthorTemplateProps) => {
           </div>
 
           <ResponsiveHeaderBackground
-            backgroundImage={author.profile_image?.childImageSharp.fluid.src}
+            backgroundImage={author.profile_image?.childImageSharp?.gatsbyImageData ? getSrc(author.profile_image?.childImageSharp?.gatsbyImageData) : undefined}
             css={[outer, SiteHeaderBackground]}
             className="site-header-background"
           >
@@ -131,7 +131,7 @@ const Author = ({ data, location }: AuthorTemplateProps) => {
                 <img
                   style={{ marginTop: '8px' }}
                   css={[AuthorProfileImage, AuthorProfileBioImage]}
-                  src={data.authorYaml.avatar.childImageSharp.fluid.src}
+                  src={getSrc(data.authorYaml.avatar.childImageSharp.gatsbyImageData)}
                   alt={author.name}
                 />
                 <AuthHeaderContent className="author-header-content">
@@ -202,75 +202,68 @@ const Author = ({ data, location }: AuthorTemplateProps) => {
   );
 };
 
-export const pageQuery = graphql`
-  query($author: String) {
-    authorYaml(name: { eq: $author }) {
-      id
-      name
-      website
-      twitter
-      bio
-      facebook
-      location
-      profile_image {
-        childImageSharp {
-          fluid(maxWidth: 3720) {
-            ...GatsbyImageSharpFluid
-          }
-        }
-      }
-      avatar {
-        childImageSharp {
-          fluid(quality: 100, srcSetBreakpoints: [40, 80, 120]) {
-            ...GatsbyImageSharpFluid
-          }
-        }
+export const pageQuery = graphql`query ($author: String) {
+  authorYaml(name: {eq: $author}) {
+    id
+    name
+    website
+    twitter
+    bio
+    facebook
+    location
+    profile_image {
+      childImageSharp {
+        gatsbyImageData(layout: FULL_WIDTH)
       }
     }
-    allMarkdownRemark(
-      filter: { frontmatter: { draft: { ne: true } } }
-      sort: { fields: [frontmatter___date], order: DESC }
-      limit: 2000
-    ) {
-      edges {
-        node {
-          excerpt(format: PLAIN)
-          timeToRead
-          frontmatter {
-            title
-            excerpt
-            tags
-            date
-            draft
-            image {
-              childImageSharp {
-                fluid(maxWidth: 3720) {
-                  ...GatsbyImageSharpFluid
-                }
-              }
+    avatar {
+      childImageSharp {
+        gatsbyImageData(
+          layout: FIXED
+        )
+      }
+    }
+  }
+  allMarkdownRemark(
+    filter: {frontmatter: {draft: {ne: true}}}
+    sort: {fields: [frontmatter___date], order: DESC}
+    limit: 2000
+  ) {
+    edges {
+      node {
+        excerpt(format: PLAIN)
+        timeToRead
+        frontmatter {
+          title
+          excerpt
+          tags
+          date
+          draft
+          image {
+            childImageSharp {
+              gatsbyImageData(layout: FULL_WIDTH)
             }
-            author {
-              name
-              bio
-              avatar {
-                children {
-                  ... on ImageSharp {
-                    fluid(quality: 100) {
-                      ...GatsbyImageSharpFluid
-                    }
-                  }
+          }
+          author {
+            name
+            bio
+            avatar {
+              children {
+                ... on ImageSharp {
+                  gatsbyImageData(layout: FULL_WIDTH)
                 }
               }
             }
           }
-          fields {
-            layout
-            slug
-          }
+        }
+        fields {
+          layout
+          slug
         }
       }
     }
   }
+}
 `;
 
 const HiddenMobile = css`
