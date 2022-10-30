@@ -89,10 +89,10 @@ export const pageQuery = graphql`
             }
           }
           excerpt(format: PLAIN)
+          timeToRead
           fields {
             layout
             slug
-            timeToRead
           }
         }
       }

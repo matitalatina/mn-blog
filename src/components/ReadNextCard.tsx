@@ -55,7 +55,7 @@ export const ReadNextCard: React.FC<ReadNextProps> = props => {
                 </h4>
                 <ReadNextCardMeta className="read-next-card-meta">
                   <p>
-                    <time dateTime={datetime}>{displayDatetime}</time> - {n.node.fields.timeToRead} min
+                    <time dateTime={datetime}>{displayDatetime}</time> - {n.node.timeToRead} min
                     read
                   </p>
                 </ReadNextCardMeta>

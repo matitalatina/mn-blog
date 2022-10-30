@@ -73,7 +73,6 @@ interface PageTemplateProps {
           };
           fields: {
             slug: string;
-            timeToRead: number;
           };
         };
       }>;
@@ -89,8 +88,8 @@ export interface PageContext {
   excerpt: string;
   fields: {
     slug: string;
-    timeToRead: number;
   };
+  timeToRead: number;
   frontmatter: {
     image: {
       childImageSharp: {

@@ -235,6 +235,7 @@ export const pageQuery = graphql`
       edges {
         node {
           excerpt(format: PLAIN)
+          timeToRead
           frontmatter {
             title
             excerpt
@@ -265,7 +266,6 @@ export const pageQuery = graphql`
           fields {
             layout
             slug
-            timeToRead
           }
         }
       }

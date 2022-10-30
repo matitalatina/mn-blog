@@ -16,13 +16,13 @@ interface ReadNextProps {
     totalCount: number;
     edges: Array<{
       node: {
+        timeToRead: number;
         frontmatter: {
           date: string;
           title: string;
         };
         fields: {
           slug: string;
-          timeToRead: number;
         };
       };
     }>;
