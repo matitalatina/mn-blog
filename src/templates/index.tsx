@@ -186,7 +186,7 @@ export const pageQuery = graphql`query blogPageQuery($skip: Int!, $limit: Int!) 
             avatar {
               children {
                 ... on ImageSharp {
-                  gatsbyImageData(layout: FULL_WIDTH)
+                  gatsbyImageData(layout: FULL_WIDTH, breakpoints: [40, 80, 120])
                 }
               }
             }

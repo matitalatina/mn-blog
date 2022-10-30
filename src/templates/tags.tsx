@@ -173,7 +173,7 @@ export const pageQuery = graphql`query ($tag: String) {
             avatar {
               children {
                 ... on ImageSharp {
-                  gatsbyImageData(layout: FULL_WIDTH)
+                  gatsbyImageData(layout: FULL_WIDTH, breakpoints: [40, 80, 120])
                 }
               }
             }

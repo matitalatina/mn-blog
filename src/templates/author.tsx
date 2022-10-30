@@ -218,9 +218,7 @@ export const pageQuery = graphql`query ($author: String) {
     }
     avatar {
       childImageSharp {
-        gatsbyImageData(
-          layout: FIXED
-        )
+        gatsbyImageData(layout: FULL_WIDTH, breakpoints: [40, 80, 120])
       }
     }
   }
@@ -250,7 +248,7 @@ export const pageQuery = graphql`query ($author: String) {
             avatar {
               children {
                 ... on ImageSharp {
-                  gatsbyImageData(layout: FULL_WIDTH)
+                  gatsbyImageData(layout: FULL_WIDTH, breakpoints: [40, 80, 120])
                 }
               }
             }
