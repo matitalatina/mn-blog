@@ -20,7 +20,7 @@ export const MyCookieConsent: React.FC = () => {
       Vorrei utilizzare i seguenti servizi che richiedono i cookies:
       <ul>
         <li key="analytics">Google Analytics: per sapere quante persone come te visitano il mio sito.</li>
-        <li key="adsense">Google Adsense: per mantere gratuito quello che stai leggendo.</li>
+        <li key="adsense"><a href="https://policies.google.com/technologies/partner-sites" title="Google Privacy Policy">Google Adsense</a>: per mantere gratuito quello che stai leggendo.</li>
       </ul>
     </CookieConsent>
   );
