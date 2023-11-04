@@ -92,26 +92,26 @@ module.exports = {
               guid: `${site.siteMetadata.siteUrl}${edge.node.fields.slug}`,
               custom_elements: [{ 'content:encoded': edge.node.html }],
             })),
-            query: `
-              {
-                allMarkdownRemark(
-                  filter: { frontmatter: { draft: { ne: true } } }
-                  sort: { order: DESC, fields: [frontmatter___date] },
-                ) {
-                  edges {
-                    node {
-                      excerpt
-                      html
-                      fields { slug }
-                      frontmatter {
-                        title
-                        date
-                      }
-                    }
-                  }
-                }
-              }
-            `,
+            query: `{
+  allMarkdownRemark(
+    filter: {frontmatter: {draft: {ne: true}}}
+    sort: {frontmatter: {date: DESC}}
+  ) {
+    edges {
+      node {
+        excerpt
+        html
+        fields {
+          slug
+        }
+        frontmatter {
+          title
+          date
+        }
+      }
+    }
+  }
+}`,
             output: '/rss.xml',
             title: 'Blog di Mattia Natali',
             match: '^/blog/',
@@ -123,35 +123,6 @@ module.exports = {
       resolve: 'gatsby-plugin-postcss',
       options: {
         postCssPlugins: [require('postcss-color-function'), require('cssnano')()],
-      },
-    },
-    {
-      resolve: 'gatsby-plugin-gdpr-tracking',
-      options: {
-        // logging to the console, if debug is true
-        debug: false,
-        googleAnalytics: {
-          // The property ID; the tracking code won't be generated without it.
-          trackingId: 'UA-81893752-1',
-          // Defines it google analytics should be started with out the cookie consent
-          autoStart: false, // <--- default
-          // Setting this parameter is optional
-          anonymize: true, // <--- default
-          // Name of the cookie, that enables the tracking if it is true
-          controlCookieName: 'gdpr-analytics-enabled', // <--- default
-          cookieFlags: 'secure;samesite=none', // <--- default
-        },
-        googleAds: {
-          // The property ID; the tracking code won't be generated without it.
-          trackingId: 'ca-pub-7145772846945296',
-          // Setting this parameter is optional
-          anonymize: true, // <--- default
-          // Name of the cookie, that enables the tracking if it is true
-          controlCookieName: 'gdpr-marketing-enabled', // <--- default
-          cookieFlags: 'secure;samesite=none', // <--- default
-        },
-        // Defines the environments where the tracking should be available  - default is ["production"]
-        environments: ['production', 'development'],
       },
     },
   ],

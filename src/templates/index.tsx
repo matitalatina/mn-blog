@@ -162,7 +162,7 @@ export const pageQuery = graphql`query blogPageQuery($skip: Int!, $limit: Int!) 
     }
   }
   allMarkdownRemark(
-    sort: {fields: [frontmatter___date], order: DESC}
+    sort: {frontmatter: {date: DESC}}
     filter: {frontmatter: {draft: {ne: true}}}
     limit: $limit
     skip: $skip
@@ -201,8 +201,7 @@ export const pageQuery = graphql`query blogPageQuery($skip: Int!, $limit: Int!) 
       }
     }
   }
-}
-`;
+}`;
 
 const HomePosts = css`
   @media (min-width: 795px) {

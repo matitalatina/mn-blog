@@ -478,7 +478,7 @@ export const query = graphql`query ($slug: String, $primaryTag: String) {
   relatedPosts: allMarkdownRemark(
     filter: {frontmatter: {tags: {in: [$primaryTag]}, draft: {ne: true}}}
     limit: 5
-    sort: {fields: [frontmatter___date], order: DESC}
+    sort: {frontmatter: {date: DESC}}
   ) {
     totalCount
     edges {
@@ -496,7 +496,6 @@ export const query = graphql`query ($slug: String, $primaryTag: String) {
       }
     }
   }
-}
-`;
+}`;
 
 export default PageTemplate;

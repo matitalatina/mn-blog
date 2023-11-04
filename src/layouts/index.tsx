@@ -7,7 +7,6 @@ import { lighten } from 'polished';
 // @ts-ignore
 import favicon from '../../src/favicon.png';
 import { colors } from '../styles/colors';
-import { MyCookieConsent } from '../components/gdpr/MyCookieConsent';
 
 interface IndexProps {
   className?: string;
@@ -497,7 +496,6 @@ const IndexLayout: React.FC<IndexProps> = props => {
         `}
       />
       {props.children}
-      <MyCookieConsent />
     </div>
   );
 };

@@ -224,7 +224,7 @@ export const pageQuery = graphql`query ($author: String) {
   }
   allMarkdownRemark(
     filter: {frontmatter: {draft: {ne: true}}}
-    sort: {fields: [frontmatter___date], order: DESC}
+    sort: {frontmatter: {date: DESC}}
     limit: 2000
   ) {
     edges {
@@ -261,8 +261,7 @@ export const pageQuery = graphql`query ($author: String) {
       }
     }
   }
-}
-`;
+}`;
 
 const HiddenMobile = css`
   @media (max-width: 500px) {
