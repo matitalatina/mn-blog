@@ -5,6 +5,7 @@ import { getSrc, IGatsbyImageData } from "gatsby-plugin-image";
 import { Footer } from '../components/Footer';
 import SiteNav from '../components/header/SiteNav';
 import { PostCard } from '../components/PostCard';
+import { SiteHead } from '../components/SiteHead';
 import { Wrapper } from '../components/Wrapper';
 import IndexLayout from '../layouts';
 import {
@@ -22,7 +23,6 @@ import {
   SiteHeaderBackground,
 } from '../styles/shared';
 import { PageContext } from './post';
-import { Helmet } from 'react-helmet';
 import config from '../website-config';
 
 interface TagTemplateProps {
@@ -54,7 +54,7 @@ interface TagTemplateProps {
   };
 }
 
-const Tags = ({ pageContext, data, location }: TagTemplateProps) => {
+const Tags = ({ pageContext, data }: TagTemplateProps) => {
   const tag = pageContext.tag ? pageContext.tag : '';
   const { edges, totalCount } = data.allMarkdownRemark;
   const tagData = data.allTagYaml.edges.find(
@@ -63,27 +63,6 @@ const Tags = ({ pageContext, data, location }: TagTemplateProps) => {
 
   return (
     <IndexLayout>
-      <Helmet>
-        <html lang={config.lang} />
-        <title>
-          {tag} - {config.title}
-        </title>
-        <meta name="description" content={tagData?.node ? tagData.node.description : ''} />
-        <meta property="og:site_name" content={config.title} />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={`${tag} - ${config.title}`} />
-        <meta property="og:url" content={config.siteUrl + location.pathname} />
-        {config.facebook && <meta property="article:publisher" content={config.facebook} />}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${tag} - ${config.title}`} />
-        <meta name="twitter:url" content={config.siteUrl + location.pathname} />
-        {config.twitter && (
-          <meta
-            name="twitter:site"
-            content={`@${config.twitter.split('https://twitter.com/')[1]}`}
-          />
-        )}
-      </Helmet>
       <Wrapper>
         <header
           className="site-archive-header"
@@ -127,6 +106,40 @@ const Tags = ({ pageContext, data, location }: TagTemplateProps) => {
         <Footer />
       </Wrapper>
     </IndexLayout>
+  );
+};
+
+export const Head = ({
+  pageContext,
+  data,
+  location,
+}: Pick<TagTemplateProps, 'pageContext' | 'data' | 'location'>) => {
+  const tag = pageContext.tag ? pageContext.tag : '';
+  const tagData = data.allTagYaml.edges.find(
+    n => n.node.name.toLowerCase() === tag.toLowerCase(),
+  );
+
+  return (
+    <SiteHead>
+      <title>
+        {tag} - {config.title}
+      </title>
+      <meta name="description" content={tagData?.node ? tagData.node.description : ''} />
+      <meta property="og:site_name" content={config.title} />
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content={`${tag} - ${config.title}`} />
+      <meta property="og:url" content={config.siteUrl + location.pathname} />
+      {config.facebook && <meta property="article:publisher" content={config.facebook} />}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={`${tag} - ${config.title}`} />
+      <meta name="twitter:url" content={config.siteUrl + location.pathname} />
+      {config.twitter && (
+        <meta
+          name="twitter:site"
+          content={`@${config.twitter.split('https://twitter.com/')[1]}`}
+        />
+      )}
+    </SiteHead>
   );
 };
 

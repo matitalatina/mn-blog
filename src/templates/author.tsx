@@ -2,11 +2,12 @@ import { graphql } from 'gatsby';
 import React from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { GatsbyImage, getSrc, IGatsbyImageData } from "gatsby-plugin-image";
+import { getSrc, IGatsbyImageData } from "gatsby-plugin-image";
 
 import { Footer } from '../components/Footer';
 import SiteNav from '../components/header/SiteNav';
 import { PostCard } from '../components/PostCard';
+import { SiteHead } from '../components/SiteHead';
 import { Wrapper } from '../components/Wrapper';
 import IndexLayout from '../layouts';
 import {
@@ -24,7 +25,6 @@ import {
   SiteHeaderBackground,
 } from '../styles/shared';
 import { PageContext } from './post';
-import { Helmet } from 'react-helmet';
 import config from '../website-config';
 
 interface AuthorTemplateProps {
@@ -63,7 +63,7 @@ interface AuthorTemplateProps {
   };
 }
 
-const Author = ({ data, location }: AuthorTemplateProps) => {
+const Author = ({ data }: AuthorTemplateProps) => {
   const author = data.authorYaml;
 
   const edges = data.allMarkdownRemark.edges.filter(edge => {
@@ -84,35 +84,6 @@ const Author = ({ data, location }: AuthorTemplateProps) => {
 
   return (
     <IndexLayout>
-      <Helmet>
-        <html lang={config.lang} />
-        <title>
-          {author.name} - {config.title}
-        </title>
-        <meta name="description" content={author.bio} />
-        <meta property="og:site_name" content={config.title} />
-        <meta property="og:type" content="profile" />
-        <meta property="og:title" content={`${author.name} - ${config.title}`} />
-        <meta property="article:publisher" content="https://www.mattianatali.it" />
-        <meta property="article:author" content="https://www.mattianatali.it" />
-        <meta property="og:url" content={config.siteUrl + location.pathname} />
-        
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={`${author.name} - ${config.title}`} />
-        <meta name="twitter:url" content={config.siteUrl + location.pathname} />
-        {config.twitter && (
-          <meta
-            name="twitter:site"
-            content={`@${config.twitter.split('https://twitter.com/')[1]}`}
-          />
-        )}
-        {config.twitter && (
-          <meta
-            name="twitter:creator"
-            content={`@${config.twitter.split('https://twitter.com/')[1]}`}
-          />
-        )}
-      </Helmet>
       <Wrapper>
         <header className="site-archive-header" css={[SiteHeader, SiteArchiveHeader]}>
           <div css={[outer, SiteNavMain]}>
@@ -199,6 +170,43 @@ const Author = ({ data, location }: AuthorTemplateProps) => {
         <Footer />
       </Wrapper>
     </IndexLayout>
+  );
+};
+
+export const Head = ({
+  data,
+  location,
+}: Pick<AuthorTemplateProps, 'data' | 'location'>) => {
+  const author = data.authorYaml;
+
+  return (
+    <SiteHead>
+      <title>
+        {author.name} - {config.title}
+      </title>
+      <meta name="description" content={author.bio} />
+      <meta property="og:site_name" content={config.title} />
+      <meta property="og:type" content="profile" />
+      <meta property="og:title" content={`${author.name} - ${config.title}`} />
+      <meta property="article:publisher" content="https://www.mattianatali.it" />
+      <meta property="article:author" content="https://www.mattianatali.it" />
+      <meta property="og:url" content={config.siteUrl + location.pathname} />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={`${author.name} - ${config.title}`} />
+      <meta name="twitter:url" content={config.siteUrl + location.pathname} />
+      {config.twitter && (
+        <meta
+          name="twitter:site"
+          content={`@${config.twitter.split('https://twitter.com/')[1]}`}
+        />
+      )}
+      {config.twitter && (
+        <meta
+          name="twitter:creator"
+          content={`@${config.twitter.split('https://twitter.com/')[1]}`}
+        />
+      )}
+    </SiteHead>
   );
 };
 

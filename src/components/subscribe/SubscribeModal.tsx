@@ -1,5 +1,5 @@
 import React from 'react';
-import { lighten, desaturate, darken, mix } from 'polished';
+import { desaturate, darken, mix } from 'polished';
 import styled from '@emotion/styled';
 
 import { colors } from '../../styles/colors';
@@ -10,7 +10,7 @@ interface SubscribeState {
   isOpen: boolean;
 }
 
-export class SubscribeModal extends React.Component<any, SubscribeState> {
+export class SubscribeModal extends React.Component<Record<string, unknown>, SubscribeState> {
   state = { isOpen: false };
 
   componentWillUnmount() {

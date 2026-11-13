@@ -6,7 +6,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { colors } from '../../styles/colors';
-import { SocialLink, SocialLinkFb } from '../../styles/shared';
+import { SocialLink } from '../../styles/shared';
 import config from '../../website-config';
 import GitHub from '../icons/github';
 import LinkedIn from '../icons/linkedin';
@@ -18,7 +18,7 @@ import { SiteNavLogo } from './SiteNavLogo';
 interface SiteNavProps {
   isHome?: boolean;
   isPost?: boolean;
-  post?: any;
+  post?: { title?: string };
 }
 
 interface SiteNavState {
@@ -102,7 +102,7 @@ class SiteNav extends React.Component<SiteNavProps, SiteNavState> {
                   <Link to="/tags/how-to/">How-to</Link>
                 </li>
                 <li key="web-en" role="menuitem">
-                  <a href="https://blog.mattianatali.dev" target="_blank">English</a>
+                  <a href="https://blog.mattianatali.dev" target="_blank" rel="noreferrer">English</a>
                 </li>
               </ul>
               {isPost && (

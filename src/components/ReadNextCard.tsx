@@ -22,7 +22,6 @@ export interface ReadNextProps {
         };
         fields: {
           slug: string;
-          timeToRead: number;
         };
       };
     }>;
