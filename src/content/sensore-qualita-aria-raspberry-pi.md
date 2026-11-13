@@ -4,7 +4,7 @@ title: Come costruire un sensore per la qualità dell'aria utilizzando un Raspbe
 excerpt: Impariamo come costruire un sensore per la qualità dell'aria resiliente con il Raspberry Pi
 image: img/air-quality-rpi/raspberrypi-air-quality.jpg
 author: [Mattia Natali]
-date: 2021-01-20T16:40:20.172Z
+date: 2021-01-17T16:40:20.172Z
 tags: 
  - IoT
  - How-to
