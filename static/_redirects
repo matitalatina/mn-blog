@@ -27,4 +27,4 @@
 /about  /it/about/  301
 /tags/:tag/  /it/tags/:tag/  301
 /author/:author/  /it/author/:author/  301
-/rss.xml  /it/rss.xml  301
+/rss.xml  /it/rss.xml  301!
