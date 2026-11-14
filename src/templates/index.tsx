@@ -10,7 +10,6 @@ import Pagination from '../components/Pagination';
 import { PostCard } from '../components/PostCard';
 import { SiteHead } from '../components/SiteHead';
 import { Wrapper } from '../components/Wrapper';
-import { useI18n } from '../i18n/LanguageProvider';
 import { getUi } from '../i18n/ui';
 import type { Lang } from '../i18n/config';
 import IndexLayout from '../layouts';
@@ -19,7 +18,6 @@ import {
   outer,
   PostFeed,
   Posts,
-  SiteDescription,
   SiteHeader,
   SiteHeaderContent,
   SiteMain,
@@ -57,7 +55,6 @@ export interface IndexProps {
 }
 
 const IndexPage: React.FC<IndexProps> = props => {
-  const { t } = useI18n();
   return (
     <IndexLayout css={HomePosts}>
       <Wrapper>
@@ -83,7 +80,6 @@ const IndexPage: React.FC<IndexProps> = props => {
                   config.title
                 )}
               </SiteTitle>
-              <SiteDescription>{t.siteDescription}</SiteDescription>
             </SiteHeaderContent>
           </div>
         </div>
