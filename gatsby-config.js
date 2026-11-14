@@ -98,7 +98,7 @@ module.exports = {
             })),
             query: `{
   allMarkdownRemark(
-    filter: {frontmatter: {draft: {ne: true}}}
+    filter: {fields: {lang: {eq: "it"}}, frontmatter: {draft: {ne: true}}}
     sort: {frontmatter: {date: DESC}}
   ) {
     edges {
@@ -116,9 +116,44 @@ module.exports = {
     }
   }
 }`,
-            output: '/rss.xml',
+            output: '/it/rss.xml',
             title: 'Blog di Mattia Natali',
-            match: '^/blog/',
+            description: 'Il mio blog personale',
+            match: '^/it/',
+          },
+          {
+            serialize: ({ query: { site, allMarkdownRemark } }) => allMarkdownRemark.edges.map(edge => ({
+              ...edge.node.frontmatter,
+              description: edge.node.excerpt,
+              date: edge.node.frontmatter.date,
+              url: `${site.siteMetadata.siteUrl}${edge.node.fields.slug}`,
+              guid: `${site.siteMetadata.siteUrl}${edge.node.fields.slug}`,
+              custom_elements: [{ 'content:encoded': edge.node.html }],
+            })),
+            query: `{
+  allMarkdownRemark(
+    filter: {fields: {lang: {eq: "en"}}, frontmatter: {draft: {ne: true}}}
+    sort: {frontmatter: {date: DESC}}
+  ) {
+    edges {
+      node {
+        excerpt
+        html
+        fields {
+          slug
+        }
+        frontmatter {
+          title
+          date
+        }
+      }
+    }
+  }
+}`,
+            output: '/en/rss.xml',
+            title: "Mattia Natali's Blog",
+            description: 'My technical personal blog',
+            match: '^/en/',
           },
         ],
       },

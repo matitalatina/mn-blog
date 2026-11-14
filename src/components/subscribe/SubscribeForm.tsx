@@ -4,11 +4,13 @@ import styled from '@emotion/styled';
 
 import { css } from '@emotion/react';
 
+import { useI18n } from '../../i18n/LanguageProvider';
 import { colors } from '../../styles/colors';
 import config from '../../website-config';
 import { buttonStyle } from '../ui/Button';
 
 export const SubscribeForm: React.FC = () => {
+  const { t } = useI18n();
   return (
     <form
       noValidate
@@ -27,14 +29,14 @@ export const SubscribeForm: React.FC = () => {
           type="email"
           name={config.mailchimpEmailFieldName}
           id={config.mailchimpEmailFieldName}
-          placeholder="tuaemail@esempio.com"
+          placeholder={t.subscribePlaceholder}
         />
       </FormGroup>
       <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
         <input type="text" name={config.mailchimpName} tabIndex={-1} />
       </div>
       <SubscribeFormButton type="submit">
-        <span>Segui</span>
+        <span>{t.subscribeButton}</span>
       </SubscribeFormButton>
     </form>
   );

@@ -1,0 +1,30 @@
+# Root: detect browser language
+/  /en/  302!  Language=en
+/  /it/  302!
+
+# Legacy Italian posts (root -> /it/)
+/benvenuti/  /it/benvenuti/  301
+/benvenuto-2019/  /it/benvenuto-2019/  301
+/autenticazione-jwt-con-angular/  /it/autenticazione-jwt-con-angular/  301
+/come-automatizzare-con-ansible-tutorial/  /it/come-automatizzare-con-ansible-tutorial/  301
+/come-essere-produttivi-con-il-terminale/  /it/come-essere-produttivi-con-il-terminale/  301
+/come-giocare-ai-videogiochi-di-due-o-tre-ere-fa/  /it/come-giocare-ai-videogiochi-di-due-o-tre-ere-fa/  301
+/come-memorizzare-i-segreti-nei-repository-pubblici/  /it/come-memorizzare-i-segreti-nei-repository-pubblici/  301
+/come-migliorare-le-foto-con-nik-collection/  /it/come-migliorare-le-foto-con-nik-collection/  301
+/come-rimuovere-i-virus-dal-computer/  /it/come-rimuovere-i-virus-dal-computer/  301
+/come-risolvere-le-regressioni-del-software-usando-git-bisect/  /it/come-risolvere-le-regressioni-del-software-usando-git-bisect/  301
+/come-scaricare-i-video-da-youtube-con-il-terminale/  /it/come-scaricare-i-video-da-youtube-con-il-terminale/  301
+/come-scaricare-le-canzoni-da-soundcloud-in-pochi-semplici-click/  /it/come-scaricare-le-canzoni-da-soundcloud-in-pochi-semplici-click/  301
+/come-sviluppare-in-test-driven-development-tdd-partendo-da-zero/  /it/come-sviluppare-in-test-driven-development-tdd-partendo-da-zero/  301
+/come-sviluppare-rest-api-in-tdd-con-spring-boot/  /it/come-sviluppare-rest-api-in-tdd-con-spring-boot/  301
+/creare-pipeline-ci-cd/  /it/creare-pipeline-ci-cd/  301
+/11-lezioni-che-ho-imparato-lavorando-nelle-startup/  /it/11-lezioni-che-ho-imparato-lavorando-nelle-startup/  301
+/sensore-qualita-aria-raspberry-pi/  /it/sensore-qualita-aria-raspberry-pi/  301
+/sei-cose-che-avrei-voluto-sapere-prima-di-diventare-engineering-manager/  /it/sei-cose-che-avrei-voluto-sapere-prima-di-diventare-engineering-manager/  301
+
+# Legacy Italian sections
+/projects  /it/projects/  301
+/about  /it/about/  301
+/tags/:tag/  /it/tags/:tag/  301
+/author/:author/  /it/author/:author/  301
+/rss.xml  /it/rss.xml  301

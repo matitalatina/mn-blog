@@ -4,24 +4,26 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
+import { useI18n } from '../i18n/LanguageProvider';
 import { colors } from '../styles/colors';
 import { outer, inner } from '../styles/shared';
 import config from '../website-config';
 
 export const Footer: React.FC = () => {
+  const { t, path } = useI18n();
   return (
     <footer css={[outer, SiteFooter]}>
       <div css={[inner, SiteFooterContent]}>
         <section className="copyright">
-          <Link to="/">{config.title}</Link> &copy; {new Date().getFullYear()}{' '}
+          <Link to={path('/')}>{config.title}</Link> &copy; {new Date().getFullYear()}{' '}
           {config.footer && (
-            <Link to="/">
+            <Link to={path('/')}>
               | {config.title} {config.footer}
             </Link>
           )}
         </section>
         <SiteFooterNav>
-          <Link to="/">Ultimi Articoli</Link>
+          <Link to={path('/')}>{t.footerLatestPosts}</Link>
           {config.linkedin && (
             <a href={config.linkedin} target="_blank" rel="noopener noreferrer">
               LinkedIn

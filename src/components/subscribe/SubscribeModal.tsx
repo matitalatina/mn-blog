@@ -1,62 +1,53 @@
-import React from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { desaturate, darken, mix } from 'polished';
 import styled from '@emotion/styled';
 
+import { useI18n } from '../../i18n/LanguageProvider';
 import { colors } from '../../styles/colors';
 import { SubscribeForm } from './SubscribeForm';
 import SubscribeLogo from './SubscribeLogo';
 
-interface SubscribeState {
-  isOpen: boolean;
+export interface SubscribeModalHandle {
+  open: () => void;
 }
 
-export class SubscribeModal extends React.Component<Record<string, unknown>, SubscribeState> {
-  state = { isOpen: false };
+export const SubscribeModal = forwardRef<SubscribeModalHandle>(function SubscribeModal(_, ref) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { t } = useI18n();
 
-  componentWillUnmount() {
-    this.unsubscribeEsc();
-  }
+  useImperativeHandle(ref, () => ({
+    open: () => setIsOpen(true),
+  }));
 
-  escFunction = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      this.close();
+  useEffect(() => {
+    if (!isOpen) {
+      return;
     }
-  };
 
-  subscribeEsc() {
-    document.addEventListener('keydown', this.escFunction, false);
-  }
+    const escFunction = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
 
-  unsubscribeEsc() {
-    document.removeEventListener('keydown', this.escFunction, false);
-  }
+    document.addEventListener('keydown', escFunction, false);
+    return () => document.removeEventListener('keydown', escFunction, false);
+  }, [isOpen]);
 
-  open = () => {
-    this.setState({ isOpen: true });
-    this.subscribeEsc();
-  };
-
-  close = () => {
-    this.setState({ isOpen: false });
-    this.unsubscribeEsc();
-  };
-
-  render() {
-    return (
-      <SubscribeOverlay open={this.state.isOpen}>
-        <SubscribeOverlayClose onClick={this.close} />
-        <SubscribeOverlayContent>
-          <SubscribeLogo />
-          <SubscribeOverlayTitle>Rimanere aggiornati è fondamentale</SubscribeOverlayTitle>
-          <SubscribeOverlayDescription>
-            Ricevi le ultime novità via email
-          </SubscribeOverlayDescription>
-          <SubscribeForm />
-        </SubscribeOverlayContent>
-      </SubscribeOverlay>
-    );
-  }
-}
+  return (
+    <SubscribeOverlay open={isOpen}>
+      <SubscribeOverlayClose onClick={() => setIsOpen(false)} />
+      <SubscribeOverlayContent>
+        <SubscribeLogo />
+        <SubscribeOverlayTitle>{t.subscribeTitle}</SubscribeOverlayTitle>
+        <SubscribeOverlayDescription>
+          {t.subscribeDescription}
+        </SubscribeOverlayDescription>
+        <SubscribeForm />
+      </SubscribeOverlayContent>
+    </SubscribeOverlay>
+  );
+});
 
 interface SubscribeOverlayProps {
   open?: boolean;

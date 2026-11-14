@@ -7,8 +7,7 @@ import React from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { it } from 'date-fns/locale';
-
+import { useI18n } from '../i18n/LanguageProvider';
 import { colors } from '../styles/colors';
 import { PageContext } from '../templates/post';
 import { AuthorList } from './AuthorList';
@@ -19,11 +18,12 @@ export interface PostCardProps {
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ post, large = false }) => {
+  const { t, dateLocale, path } = useI18n();
   const date = new Date(post.frontmatter.date);
   // 2018-08-20
   const datetime = format(date, 'yyyy-MM-dd');
   // 20 AUG 2018
-  const displayDatetime = format(date, 'dd LLL yyyy', { locale: it });
+  const displayDatetime = format(date, 'dd LLL yyyy', { locale: dateLocale });
 
   return (
     <article
@@ -65,7 +65,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, large = false }) => {
               {post.frontmatter.author.map((author, index) => {
                 return (
                   <React.Fragment key={author.name}>
-                    <Link to={`/author/${_.kebabCase(author.name)}/`}>{author.name}</Link>
+                    <Link to={path(`/author/${_.kebabCase(author.name)}/`)}>{author.name}</Link>
                     {post.frontmatter.author.length - 1 > index && ', '}
                   </React.Fragment>
                 );
@@ -73,7 +73,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, large = false }) => {
             </span>
             <span className="post-card-byline-date">
               <time dateTime={datetime}>{displayDatetime}</time>{' '}
-              <span className="bull">&bull;</span> {post.timeToRead} min
+              <span className="bull">&bull;</span> {t.minRead(post.timeToRead)}
             </span>
           </PostCardBylineContent>
         </PostCardMeta>

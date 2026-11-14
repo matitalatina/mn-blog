@@ -7,6 +7,8 @@ import SiteNav from '../components/header/SiteNav';
 import { PostCard } from '../components/PostCard';
 import { SiteHead } from '../components/SiteHead';
 import { Wrapper } from '../components/Wrapper';
+import { useI18n } from '../i18n/LanguageProvider';
+import type { Lang } from '../i18n/config';
 import IndexLayout from '../layouts';
 import {
   inner,
@@ -29,6 +31,7 @@ interface TagTemplateProps {
   location: Location;
   pageContext: {
     tag: string;
+    lang: Lang;
   };
   data: {
     allTagYaml: {
@@ -55,6 +58,7 @@ interface TagTemplateProps {
 }
 
 const Tags = ({ pageContext, data }: TagTemplateProps) => {
+  const { t } = useI18n();
   const tag = pageContext.tag ? pageContext.tag : '';
   const { edges, totalCount } = data.allMarkdownRemark;
   const tagData = data.allTagYaml.edges.find(
@@ -81,15 +85,9 @@ const Tags = ({ pageContext, data }: TagTemplateProps) => {
             <SiteHeaderContent css={inner} className="site-header-content">
               <SiteTitle className="site-title">{tag}</SiteTitle>
               <SiteDescription className="site-description">
-                {tagData?.node.description ? (
-                  tagData.node.description
-                ) : (
-                  <>
-                    Una collezione di {totalCount > 1 && `${totalCount} articoli`}
-                    {totalCount === 1 && '1 articolo'}
-                    {totalCount === 0 && 'Nessun articolo'}
-                  </>
-                )}
+                {tagData?.node.description
+                  ? tagData.node.description
+                  : t.tagCollection(totalCount)}
               </SiteDescription>
             </SiteHeaderContent>
           </ResponsiveHeaderBackground>
@@ -145,8 +143,8 @@ export const Head = ({
 
 export default Tags;
 
-export const pageQuery = graphql`query ($tag: String) {
-  allTagYaml {
+export const pageQuery = graphql`query ($tag: String, $lang: String!) {
+  allTagYaml(filter: {lang: {eq: $lang}}) {
     edges {
       node {
         id
@@ -163,7 +161,7 @@ export const pageQuery = graphql`query ($tag: String) {
   allMarkdownRemark(
     limit: 2000
     sort: {frontmatter: {date: DESC}}
-    filter: {frontmatter: {tags: {in: [$tag]}, draft: {ne: true}}}
+    filter: {fields: {lang: {eq: $lang}}, frontmatter: {tags: {in: [$tag]}, draft: {ne: true}}}
   ) {
     totalCount
     edges {

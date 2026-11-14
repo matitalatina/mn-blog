@@ -3,6 +3,7 @@ import { graphql, Link, useStaticQuery } from 'gatsby';
 import { css } from '@emotion/react';
 import { getSrc, IGatsbyImageData } from 'gatsby-plugin-image';
 
+import { useI18n } from '../../i18n/LanguageProvider';
 import config from '../../website-config';
 
 interface SiteNavLogoProps {
@@ -14,6 +15,7 @@ interface SiteNavLogoProps {
 }
 
 export const SiteNavLogo = () => {
+  const { path } = useI18n();
   const data: SiteNavLogoProps = useStaticQuery(graphql`
     query HeadingQuery {
       logo: file(relativePath: { eq: "img/ghost-logo.png" }) {
@@ -24,7 +26,7 @@ export const SiteNavLogo = () => {
     }
   `);
   return (
-    <Link className="site-nav-logo" css={SiteNavLogoStyles} to="/">
+    <Link className="site-nav-logo" css={SiteNavLogoStyles} to={path('/')}>
       {data.logo ? (
         <img src={getSrc(data.logo.childImageSharp.gatsbyImageData)} alt={config.title} />
       ) : (

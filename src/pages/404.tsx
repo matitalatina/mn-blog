@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import SiteNav from '../components/header/SiteNav';
 import { PostCard } from '../components/PostCard';
 import { Wrapper } from '../components/Wrapper';
+import { useI18n } from '../i18n/LanguageProvider';
 import IndexLayout from '../layouts';
 import { colors } from '../styles/colors';
 import { inner, outer, PostFeed, SiteHeader, SiteNavMain } from '../styles/shared';
@@ -24,7 +25,10 @@ interface NotFoundTemplateProps {
 }
 
 const NotFoundPage: React.FC<NotFoundTemplateProps> = props => {
-  const { edges } = props.data.allMarkdownRemark;
+  const { t, lang, path } = useI18n();
+  const edges = props.data.allMarkdownRemark.edges.filter(
+    ({ node }) => !node.fields.lang || node.fields.lang === lang,
+  ).slice(0, 3);
 
   return (
     <IndexLayout>
@@ -40,9 +44,9 @@ const NotFoundPage: React.FC<NotFoundTemplateProps> = props => {
           <div css={[inner]}>
             <section style={{ textAlign: 'center' }}>
               <ErrorCode>404</ErrorCode>
-              <ErrorDescription>Pagina non trovata</ErrorDescription>
-              <Link css={ErrorLink} to="">
-                Vai alla pagina principale →
+              <ErrorDescription>{t.notFound}</ErrorDescription>
+              <Link css={ErrorLink} to={path('/')}>
+                {t.backHome}
               </Link>
             </section>
 
@@ -88,6 +92,7 @@ export const pageQuery = graphql`{
         fields {
           layout
           slug
+          lang
         }
       }
     }

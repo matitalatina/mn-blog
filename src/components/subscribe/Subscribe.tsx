@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useI18n } from '../../i18n/LanguageProvider';
 import { SubscribeForm } from './SubscribeForm';
 import { Hero } from '../ui/hero/Hero';
 import { HeroTitle } from '../ui/hero/HeroTitle';
@@ -9,10 +10,11 @@ export interface SubscribeProps {
 }
 
 export const Subscribe: React.FC<SubscribeProps> = () => {
+  const { t } = useI18n();
   return (
     <SubscribeFormSection>
-      <SubscribeFormTitle css={SubscribeFormTitle}>Rimanere aggiornati è fondamentale</SubscribeFormTitle>
-      <p>Ricevi le ultime novità via email</p>
+      <SubscribeFormTitle css={SubscribeFormTitle}>{t.subscribeTitle}</SubscribeFormTitle>
+      <p>{t.subscribeDescription}</p>
       <SubscribeForm />
     </SubscribeFormSection>
   );

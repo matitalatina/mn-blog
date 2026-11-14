@@ -5,7 +5,6 @@ import { GatsbyImage, getSrc, IGatsbyImageData } from "gatsby-plugin-image";
 import * as _ from 'lodash';
 import { lighten, setLightness } from 'polished';
 import React from 'react';
-import { it } from 'date-fns/locale';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -17,6 +16,9 @@ import { ReadNext } from '../components/ReadNext';
 import { SiteHead } from '../components/SiteHead';
 import { Subscribe } from '../components/subscribe/Subscribe';
 import { Wrapper } from '../components/Wrapper';
+import { useI18n } from '../i18n/LanguageProvider';
+import { getUi } from '../i18n/ui';
+import { otherLang, type Lang } from '../i18n/config';
 import IndexLayout from '../layouts';
 import { colors } from '../styles/colors';
 import { inner, outer, SiteMain } from '../styles/shared';
@@ -48,7 +50,7 @@ interface PageTemplateProps {
       html: string;
       htmlAst: Root;
       excerpt: string;
-      timeToRead: string;
+      timeToRead: number;
       frontmatter: {
         title: string;
         date: string;
@@ -82,6 +84,8 @@ interface PageTemplateProps {
   pageContext: {
     prev: PageContext;
     next: PageContext;
+    lang: Lang;
+    translationPath?: string | null;
   };
 }
 
@@ -89,6 +93,8 @@ export interface PageContext {
   excerpt: string;
   fields: {
     slug: string;
+    lang?: string;
+    translationKey?: string;
   };
   timeToRead: number;
   frontmatter: {
@@ -107,13 +113,14 @@ export interface PageContext {
 }
 
 const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
+  const { t, dateLocale, path } = useI18n();
   const post = data.markdownRemark;
 
   const date = new Date(post.frontmatter.date);
   // 2018-08-20
   const datetime = format(date, 'yyyy-MM-dd');
   // 20 AUG 2018
-  const displayDatetime = format(date, 'dd LLL yyyy', { locale: it });
+  const displayDatetime = format(date, 'dd LLL yyyy', { locale: dateLocale });
 
   return (
     <IndexLayout className="post-template">
@@ -121,7 +128,7 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
         <header className="site-header">
           <div css={[outer, SiteNavMain]}>
             <div css={inner}>
-              <SiteNav isPost post={post.frontmatter} />
+              <SiteNav isPost post={post.frontmatter} translationPath={pageContext.translationPath} />
             </div>
           </div>
         </header>
@@ -132,7 +139,7 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
               <PostFullHeader className="post-full-header">
                 <PostFullTags className="post-full-tags">
                   {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
-                    <Link to={`/tags/${_.kebabCase(post.frontmatter.tags[0])}/`}>
+                    <Link to={path(`/tags/${_.kebabCase(post.frontmatter.tags[0])}/`)}>
                       {post.frontmatter.tags[0]}
                     </Link>
                   )}
@@ -147,7 +154,7 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
                     <section className="post-full-byline-meta">
                       <h4 className="author-name">
                         {post.frontmatter.author.map(author => (
-                          <Link key={author.name} to={`/author/${_.kebabCase(author.name)}/`}>
+                          <Link key={author.name} to={path(`/author/${_.kebabCase(author.name)}/`)}>
                             {author.name}
                           </Link>
                         ))}
@@ -157,7 +164,7 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
                           {displayDatetime}
                         </time>
                         <span className="byline-reading-time">
-                          <span className="bull">&bull;</span> {post.timeToRead} min
+                          <span className="bull">&bull;</span> {t.minRead(post.timeToRead)}
                         </span>
                       </div>
                     </section>
@@ -175,8 +182,8 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
               )}
               <PostContent htmlAst={post.htmlAst} />
               <ShareButtons
-                title={`Davvero interessante! 👇\n${post.frontmatter.title}`}
-                subject="Ho trovato questo articolo online"
+                title={t.shareTitle(post.frontmatter.title)}
+                subject={t.shareSubject}
                 url={location.href} tags={post.frontmatter.tags}
                 twitterAuthor={config.twitter?.match(/([^/]*)\/*$/)?.[1]}
               />
@@ -203,10 +210,15 @@ const PageTemplate = ({ data, pageContext, location }: PageTemplateProps) => {
 export const Head = ({
   data,
   location,
-}: Pick<PageTemplateProps, 'data' | 'location'>) => {
+  pageContext,
+}: Pick<PageTemplateProps, 'data' | 'location' | 'pageContext'>) => {
   const post = data.markdownRemark;
   const image = post.frontmatter.image?.childImageSharp?.gatsbyImageData;
   const imageSrc = image ? getSrc(image) : undefined;
+  const lang = pageContext.lang;
+  const alternateLang = otherLang(lang);
+  const alternatePath = pageContext.translationPath || `/${alternateLang}/`;
+  const t = getUi(lang);
 
   return (
     <SiteHead>
@@ -217,6 +229,13 @@ export const Head = ({
       <meta property="og:title" content={post.frontmatter.title} />
       <meta property="og:description" content={post.frontmatter.excerpt || post.excerpt} />
       <meta property="og:url" content={config.siteUrl + location.pathname} />
+      <link rel="alternate" hrefLang={lang} href={`${config.siteUrl}${location.pathname}`} />
+      {pageContext.translationPath && (
+        <>
+          <link rel="alternate" hrefLang={alternateLang} href={`${config.siteUrl}${alternatePath}`} />
+          <link rel="alternate" hrefLang="x-default" href={`${config.siteUrl}${lang === 'it' ? location.pathname : alternatePath}`} />
+        </>
+      )}
       {imageSrc && <meta property="og:image" content={`${config.siteUrl}${imageSrc}`} />}
       <meta property="article:published_time" content={post.frontmatter.date} />
       {post.frontmatter.tags && (
@@ -229,7 +248,7 @@ export const Head = ({
       <meta name="twitter:description" content={post.frontmatter.excerpt || post.excerpt} />
       <meta name="twitter:url" content={config.siteUrl + location.pathname} />
       {imageSrc && <meta name="twitter:image" content={`${config.siteUrl}${imageSrc}`} />}
-      <meta name="twitter:label1" content="Written by" />
+      <meta name="twitter:label1" content={t.by} />
       <meta name="twitter:data1" content={post.frontmatter.author[0].name} />
       <meta name="twitter:label2" content="Filed under" />
       {post.frontmatter.tags && <meta name="twitter:data2" content={post.frontmatter.tags[0]} />}
@@ -437,7 +456,7 @@ const PostFullImage = styled.figure`
   }
 `;
 
-export const query = graphql`query ($slug: String, $primaryTag: String) {
+export const query = graphql`query ($slug: String, $primaryTag: String, $lang: String!) {
   logo: file(relativePath: {eq: "img/ghost-logo.png"}) {
     childImageSharp {
       gatsbyImageData(layout: FIXED)
@@ -473,7 +492,7 @@ export const query = graphql`query ($slug: String, $primaryTag: String) {
     }
   }
   relatedPosts: allMarkdownRemark(
-    filter: {frontmatter: {tags: {in: [$primaryTag]}, draft: {ne: true}}}
+    filter: {fields: {lang: {eq: $lang}}, frontmatter: {tags: {in: [$primaryTag]}, draft: {ne: true}}}
     limit: 5
     sort: {frontmatter: {date: DESC}}
   ) {

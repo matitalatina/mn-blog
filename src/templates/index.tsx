@@ -10,6 +10,9 @@ import Pagination from '../components/Pagination';
 import { PostCard } from '../components/PostCard';
 import { SiteHead } from '../components/SiteHead';
 import { Wrapper } from '../components/Wrapper';
+import { useI18n } from '../i18n/LanguageProvider';
+import { getUi } from '../i18n/ui';
+import type { Lang } from '../i18n/config';
 import IndexLayout from '../layouts';
 import {
   inner,
@@ -32,6 +35,7 @@ export interface IndexProps {
   pageContext: {
     currentPage: number;
     numPages: number;
+    lang: Lang;
   };
   data: {
     logo: {
@@ -53,6 +57,7 @@ export interface IndexProps {
 }
 
 const IndexPage: React.FC<IndexProps> = props => {
+  const { t } = useI18n();
   return (
     <IndexLayout css={HomePosts}>
       <Wrapper>
@@ -78,7 +83,7 @@ const IndexPage: React.FC<IndexProps> = props => {
                   config.title
                 )}
               </SiteTitle>
-              <SiteDescription>{config.description}</SiteDescription>
+              <SiteDescription>{t.siteDescription}</SiteDescription>
             </SiteHeaderContent>
           </div>
         </div>
@@ -110,29 +115,40 @@ const IndexPage: React.FC<IndexProps> = props => {
   );
 };
 
-export const Head = ({ data }: { data: IndexProps['data'] }) => {
+export const Head = ({
+  data,
+  pageContext,
+}: {
+  data: IndexProps['data'];
+  pageContext: IndexProps['pageContext'];
+}) => {
   const headerImage = data.header.childImageSharp.gatsbyImageData;
   const { width, height } = headerImage;
   const headerSrc = getSrc(headerImage);
+  const t = getUi(pageContext.lang);
+  const pageUrl = `${config.siteUrl}/${pageContext.lang}/`;
 
   return (
     <SiteHead>
       <title>{config.title}</title>
-      <meta name="description" content={config.description} />
+      <meta name="description" content={t.siteDescription} />
       <meta property="og:site_name" content={config.title} />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={config.title} />
-      <meta property="og:description" content={config.description} />
-      <meta property="og:url" content={config.siteUrl} />
+      <meta property="og:description" content={t.siteDescription} />
+      <meta property="og:url" content={pageUrl} />
       <meta property="og:image" content={`${config.siteUrl}${headerSrc}`} />
+      <link rel="alternate" hrefLang="it" href={`${config.siteUrl}/it/`} />
+      <link rel="alternate" hrefLang="en" href={`${config.siteUrl}/en/`} />
+      <link rel="alternate" hrefLang="x-default" href={`${config.siteUrl}/it/`} />
       {config.facebook && <meta property="article:publisher" content={config.facebook} />}
       {config.googleSiteVerification && (
         <meta name="google-site-verification" content={config.googleSiteVerification} />
       )}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={config.title} />
-      <meta name="twitter:description" content={config.description} />
-      <meta name="twitter:url" content={config.siteUrl} />
+      <meta name="twitter:description" content={t.siteDescription} />
+      <meta name="twitter:url" content={pageUrl} />
       <meta name="twitter:image" content={`${config.siteUrl}${headerSrc}`} />
       {config.twitter && (
         <meta
@@ -146,7 +162,7 @@ export const Head = ({ data }: { data: IndexProps['data'] }) => {
   );
 };
 
-export const pageQuery = graphql`query blogPageQuery($skip: Int!, $limit: Int!) {
+export const pageQuery = graphql`query blogPageQuery($skip: Int!, $limit: Int!, $lang: String!) {
   logo: file(relativePath: {eq: "img/ghost-logo.png"}) {
     childImageSharp {
       gatsbyImageData(layout: FIXED)
@@ -159,7 +175,7 @@ export const pageQuery = graphql`query blogPageQuery($skip: Int!, $limit: Int!) 
   }
   allMarkdownRemark(
     sort: {frontmatter: {date: DESC}}
-    filter: {frontmatter: {draft: {ne: true}}}
+    filter: {fields: {lang: {eq: $lang}}, frontmatter: {draft: {ne: true}}}
     limit: $limit
     skip: $skip
   ) {
@@ -193,6 +209,7 @@ export const pageQuery = graphql`query blogPageQuery($skip: Int!, $limit: Int!) 
         fields {
           layout
           slug
+          lang
         }
       }
     }

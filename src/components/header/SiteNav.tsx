@@ -1,176 +1,169 @@
 import { Link } from 'gatsby';
 import { darken } from 'polished';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { useI18n } from '../../i18n/LanguageProvider';
 import { colors } from '../../styles/colors';
 import { SocialLink } from '../../styles/shared';
 import config from '../../website-config';
+import { Facebook } from '../icons/facebook';
 import GitHub from '../icons/github';
 import LinkedIn from '../icons/linkedin';
-import { Facebook } from '../icons/facebook';
 import { Twitter } from '../icons/twitter';
-import { SubscribeModal } from '../subscribe/SubscribeModal';
+import { SubscribeModal, SubscribeModalHandle } from '../subscribe/SubscribeModal';
 import { SiteNavLogo } from './SiteNavLogo';
 
 interface SiteNavProps {
   isHome?: boolean;
   isPost?: boolean;
   post?: { title?: string };
+  translationPath?: string | null;
 }
 
-interface SiteNavState {
-  showTitle: boolean;
-}
+const SiteNav: React.FC<SiteNavProps> = ({
+  isHome = false,
+  isPost = false,
+  post = {},
+  translationPath,
+}) => {
+  const { t, path, switchPath } = useI18n();
+  const [showTitle, setShowTitle] = useState(false);
+  const subscribe = useRef<SubscribeModalHandle>(null);
+  const titleRef = useRef<HTMLSpanElement>(null);
 
-class SiteNav extends React.Component<SiteNavProps, SiteNavState> {
-  subscribe = React.createRef<SubscribeModal>();
-  titleRef = React.createRef<HTMLSpanElement>();
-  lastScrollY = 0;
-  ticking = false;
-  state = { showTitle: false };
-
-  openModal = () => {
-    if (this.subscribe.current) {
-      this.subscribe.current.open();
-    }
-  };
-
-  componentDidMount(): void {
-    this.lastScrollY = window.scrollY;
-    if (this.props.isPost) {
-      window.addEventListener('scroll', this.onScroll, { passive: true });
-    }
-  }
-
-  componentWillUnmount(): void {
-    window.removeEventListener('scroll', this.onScroll);
-  }
-
-  onScroll = () => {
-    if (!this.titleRef || !this.titleRef.current) {
+  useEffect(() => {
+    if (!isPost) {
       return;
     }
 
-    if (!this.ticking) {
-      requestAnimationFrame(this.update);
-    }
+    let lastScrollY = window.scrollY;
+    let ticking = false;
 
-    this.ticking = true;
+    const update = () => {
+      if (!titleRef.current) {
+        return;
+      }
+
+      lastScrollY = window.scrollY;
+      const trigger = titleRef.current.getBoundingClientRect().top;
+      const triggerOffset = titleRef.current.offsetHeight + 35;
+      setShowTitle(lastScrollY >= trigger + triggerOffset);
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!titleRef.current) {
+        return;
+      }
+      if (!ticking) {
+        requestAnimationFrame(update);
+      }
+      ticking = true;
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isPost]);
+
+  const openModal = () => {
+    subscribe.current?.open();
   };
 
-  update = () => {
-    if (!this.titleRef || !this.titleRef.current) {
-      return;
-    }
-
-    this.lastScrollY = window.scrollY;
-
-    const trigger = this.titleRef.current.getBoundingClientRect().top;
-    const triggerOffset = this.titleRef.current.offsetHeight + 35;
-
-    // show/hide post title
-    if (this.lastScrollY >= trigger + triggerOffset) {
-      this.setState({ showTitle: true });
-    } else {
-      this.setState({ showTitle: false });
-    }
-
-    this.ticking = false;
-  };
-
-  render() {
-    const { isHome = false, isPost = false, post = {} } = this.props;
-    return (
-      <>
-        {config.showSubscribe && <SubscribeModal ref={this.subscribe} />}
-        <nav css={SiteNavStyles}>
-          <SiteNavLeft className="site-nav-left">
-            {!isHome && <SiteNavLogo />}
-            <SiteNavContent css={this.state.showTitle ? HideNav : ''}>
-              <ul css={NavStyles} role="menu">
-                {/* TODO: mark current nav item - add class nav-current */}
-                <li key="home" role="menuitem">
-                  <Link to="/">Home</Link>
-                </li>
-                <li key="projects" role="menuitem">
-                  <Link to="/projects">Progetti</Link>
-                </li>
-                <li key="dev" role="menuitem">
-                  <Link to="/tags/dev/">Dev</Link>
-                </li>
-                <li key="how-to" role="menuitem">
-                  <Link to="/tags/how-to/">How-to</Link>
-                </li>
-                <li key="web-en" role="menuitem">
-                  <a href="https://blog.mattianatali.dev" target="_blank" rel="noreferrer">English</a>
-                </li>
-              </ul>
-              {isPost && (
-                <NavPostTitle ref={this.titleRef} className="nav-post-title">
-                  {post.title}
-                </NavPostTitle>
-              )}
-            </SiteNavContent>
-          </SiteNavLeft>
-          <SiteNavRight>
-            <SocialLinks>
-              {config.linkedin && (
-                <a
-                  css={SocialLink}
-                  href={config.linkedin}
-                  target="_blank"
-                  title="LinkedIn"
-                  rel="noopener noreferrer"
-                >
-                  <LinkedIn />
+  return (
+    <>
+      {config.showSubscribe && <SubscribeModal ref={subscribe} />}
+      <nav css={SiteNavStyles}>
+        <SiteNavLeft className="site-nav-left">
+          {!isHome && <SiteNavLogo />}
+          <SiteNavContent css={showTitle ? HideNav : ''}>
+            <ul css={NavStyles} role="menu">
+              {/* TODO: mark current nav item - add class nav-current */}
+              <li key="home" role="menuitem">
+                <Link to={path('/')}>{t.navHome}</Link>
+              </li>
+              <li key="projects" role="menuitem">
+                <Link to={path('/projects')}>{t.navProjects}</Link>
+              </li>
+              <li key="dev" role="menuitem">
+                <Link to={path('/tags/dev/')}>{t.navDev}</Link>
+              </li>
+              <li key="how-to" role="menuitem">
+                <Link to={path('/tags/how-to/')}>{t.navHowTo}</Link>
+              </li>
+              <li key="slides" role="menuitem">
+                <a href="https://slides.mattianatali.dev" target="_blank" rel="noreferrer">
+                  {t.navSlides}
                 </a>
-              )}
-              {config.github && (
-                <a
-                  css={SocialLink}
-                  href={config.github}
-                  target="_blank"
-                  title="GitHub"
-                  rel="noopener noreferrer"
-                >
-                  <GitHub />
-                </a>
-              )}
-              {config.facebook && (
-                <a
-                  css={SocialLink}
-                  href={config.facebook}
-                  target="_blank"
-                  title="Facebook"
-                  rel="noopener noreferrer"
-                >
-                  <Facebook />
-                </a>
-              )}
-              {config.twitter && (
-                <a
-                  css={SocialLink}
-                  href={config.twitter}
-                  title="X"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Twitter />
-                </a>
-              )}
-            </SocialLinks>
-            {config.showSubscribe && (
-              <SubscribeButton onClick={this.openModal}>Segui</SubscribeButton>
+              </li>
+              <li key="language" role="menuitem">
+                <Link to={translationPath || switchPath}>{t.languageName}</Link>
+              </li>
+            </ul>
+            {isPost && (
+              <NavPostTitle ref={titleRef} className="nav-post-title">
+                {post.title}
+              </NavPostTitle>
             )}
-          </SiteNavRight>
-        </nav>
-      </>
-    );
-  }
-}
+          </SiteNavContent>
+        </SiteNavLeft>
+        <SiteNavRight>
+          <SocialLinks>
+            {config.linkedin && (
+              <a
+                css={SocialLink}
+                href={config.linkedin}
+                target="_blank"
+                title="LinkedIn"
+                rel="noopener noreferrer"
+              >
+                <LinkedIn />
+              </a>
+            )}
+            {config.github && (
+              <a
+                css={SocialLink}
+                href={config.github}
+                target="_blank"
+                title="GitHub"
+                rel="noopener noreferrer"
+              >
+                <GitHub />
+              </a>
+            )}
+            {config.facebook && (
+              <a
+                css={SocialLink}
+                href={config.facebook}
+                target="_blank"
+                title="Facebook"
+                rel="noopener noreferrer"
+              >
+                <Facebook />
+              </a>
+            )}
+            {config.twitter && (
+              <a
+                css={SocialLink}
+                href={config.twitter}
+                title="X"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Twitter />
+              </a>
+            )}
+          </SocialLinks>
+          {config.showSubscribe && (
+            <SubscribeButton onClick={openModal}>{t.navFollow}</SubscribeButton>
+          )}
+        </SiteNavRight>
+      </nav>
+    </>
+  );
+};
 
 export const SiteNavMain = css`
   position: fixed;

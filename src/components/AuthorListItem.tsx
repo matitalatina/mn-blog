@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 
 import { css } from '@emotion/react';
 
+import { useI18n } from '../i18n/LanguageProvider';
 import { colors } from '../styles/colors';
 import { Author } from '../templates/post';
 import { AuthorProfileImage } from './PostCard';
@@ -17,6 +18,7 @@ interface AuthorListItemProps {
 }
 
 export const AuthorListItem: React.FC<AuthorListItemProps> = props => {
+  const { t, path } = useI18n();
   const [hovered, setHover] = useState(false);
   let timeout: ReturnType<typeof setTimeout>;
   function handleMouseEnter() {
@@ -57,7 +59,7 @@ export const AuthorListItem: React.FC<AuthorListItemProps> = props => {
               <h2>{props.author.name}</h2>
               <p>{props.author.bio}</p>
               <p>
-                <Link to={`/author/${_.kebabCase(props.author.name)}/`}>More posts</Link> by{' '}
+                <Link to={path(`/author/${_.kebabCase(props.author.name)}/`)}>{t.morePosts}</Link> {t.by}{' '}
                 {props.author.name}.
               </p>
             </div>
@@ -67,7 +69,7 @@ export const AuthorListItem: React.FC<AuthorListItemProps> = props => {
       <Link
         css={AuthorAvatar}
         className="author-avatar"
-        to={`/author/${_.kebabCase(props.author.name)}/`}
+        to={path(`/author/${_.kebabCase(props.author.name)}/`)}
       >
         <GatsbyImage
           image={props.author.avatar.children[0].gatsbyImageData}

@@ -1,6 +1,7 @@
 import { BuyBeerButton } from './BuyBeerBtn';
 
 import React from 'react';
+import { useI18n } from '../../i18n/LanguageProvider';
 import { Hero } from '../ui/hero/Hero';
 import { HeroTitle } from '../ui/hero/HeroTitle';
 import { SponsorGithubBtn } from './SponsorGithubBtn';
@@ -13,10 +14,11 @@ const boxCss = css`
 `;
 
 export const SponsorCall: React.FC = () => {
+  const { t } = useI18n();
   return (
     <Hero>
-      <HeroTitle>Hai imparato qualcosa di nuovo?</HeroTitle>
-      <p>Aiutami a creare altri contenuti come questo!</p>
+      <HeroTitle>{t.sponsorTitle}</HeroTitle>
+      <p>{t.sponsorDescription}</p>
       <BtnGroup>
         <BuyBeerButton css={boxCss} />
         <SponsorGithubBtn css={boxCss} />

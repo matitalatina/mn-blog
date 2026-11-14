@@ -2,6 +2,8 @@
 const path = require('path');
 const _ = require('lodash');
 
+const LANGS = ['it', 'en'];
+
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions;
 
@@ -12,13 +14,18 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   // eslint-disable-next-line default-case
   switch (node.internal.type) {
     case 'MarkdownRemark': {
-      const { permalink, layout, primaryTag } = node.frontmatter;
+      const { permalink, layout, primaryTag, translationKey } = node.frontmatter;
       const { relativePath } = getNode(node.parent);
+      const localeMatch = relativePath.match(/^(it|en)\/(.+)$/);
+      const lang = localeMatch ? localeMatch[1] : 'it';
+      const contentPath = (localeMatch ? localeMatch[2] : relativePath).replace(/\.md$/, '');
 
       let slug = permalink;
 
       if (!slug) {
-        slug = `/${relativePath.replace('.md', '')}/`;
+        slug = `/${lang}/${contentPath}/`;
+      } else if (!slug.startsWith(`/${lang}/`)) {
+        slug = `/${lang}${slug.startsWith('/') ? slug : `/${slug}`}`;
       }
 
       // Used to generate URL to view this content.
@@ -39,6 +46,18 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
         node,
         name: 'primaryTag',
         value: primaryTag || '',
+      });
+
+      createNodeField({
+        node,
+        name: 'lang',
+        value: lang,
+      });
+
+      createNodeField({
+        node,
+        name: 'translationKey',
+        value: translationKey || '',
       });
     }
   }
@@ -83,7 +102,17 @@ exports.createPages = async ({ graphql, actions }) => {
         fields {
           layout
           slug
+          lang
+          translationKey
         }
+      }
+    }
+  }
+  allTagYaml {
+    edges {
+      node {
+        name
+        lang
       }
     }
   }
@@ -101,82 +130,113 @@ exports.createPages = async ({ graphql, actions }) => {
     throw new Error(result.errors);
   }
 
-  // Create post pages
   const posts = result.data.allMarkdownRemark.edges;
+  const postsByLang = { it: [], en: [] };
+  const translations = {};
 
-  // Create paginated index
+  posts.forEach(edge => {
+    const lang = edge.node.fields.lang || 'it';
+    postsByLang[lang].push(edge);
+
+    const key = edge.node.fields.translationKey;
+    if (key) {
+      translations[key] = translations[key] || {};
+      translations[key][lang] = edge.node.fields.slug;
+    }
+  });
+
+  // Create paginated indexes
   // TODO: new pagination
   const postsPerPage = 1000;
-  const numPages = Math.ceil(posts.length / postsPerPage);
 
-  Array.from({ length: numPages }).forEach((_, i) => {
-    createPage({
-      path: i === 0 ? '/' : `/${i + 1}`,
-      component: path.resolve('./src/templates/index.tsx'),
-      context: {
-        limit: postsPerPage,
-        skip: i * postsPerPage,
-        numPages,
-        currentPage: i + 1,
-      },
+  LANGS.forEach(lang => {
+    const numPages = Math.max(1, Math.ceil(postsByLang[lang].length / postsPerPage));
+
+    Array.from({ length: numPages }).forEach((_, i) => {
+      createPage({
+        path: i === 0 ? `/${lang}/` : `/${lang}/${i + 1}/`,
+        component: path.resolve('./src/templates/index.tsx'),
+        context: {
+          limit: postsPerPage,
+          skip: i * postsPerPage,
+          numPages,
+          currentPage: i + 1,
+          lang,
+        },
+      });
     });
   });
 
-  posts.forEach(({ node }, index) => {
-    const { slug, layout } = node.fields;
-    const prev = index === 0 ? null : posts[index - 1].node;
-    const next = index === posts.length - 1 ? null : posts[index + 1].node;
+  // Create post pages
+  LANGS.forEach(lang => {
+    const langPosts = postsByLang[lang];
 
-    createPage({
-      path: slug,
-      // This will automatically resolve the template to a corresponding
-      // `layout` frontmatter in the Markdown.
-      //
-      // Feel free to set any `layout` as you'd like in the frontmatter, as
-      // long as the corresponding template file exists in src/templates.
-      // If no template is set, it will fall back to the default `post`
-      // template.
-      //
-      // Note that the template has to exist first, or else the build will fail.
-      component: path.resolve(`./src/templates/${layout || 'post'}.tsx`),
-      context: {
-        // Data passed to context is available in page queries as GraphQL variables.
-        slug,
-        prev,
-        next,
-        primaryTag: node.frontmatter.tags ? node.frontmatter.tags[0] : '',
-      },
+    langPosts.forEach(({ node }, index) => {
+      const { slug, layout } = node.fields;
+      const prev = index === 0 ? null : langPosts[index - 1].node;
+      const next = index === langPosts.length - 1 ? null : langPosts[index + 1].node;
+      const translation = translations[node.fields.translationKey] || {};
+      const translationPath = translation[lang === 'it' ? 'en' : 'it'] || null;
+
+      createPage({
+        path: slug,
+        // This will automatically resolve the template to a corresponding
+        // `layout` frontmatter in the Markdown.
+        //
+        // Feel free to set any `layout` as you'd like in the frontmatter, as
+        // long as the corresponding template file exists in src/templates.
+        // If no template is set, it will fall back to the default `post`
+        // template.
+        //
+        // Note that the template has to exist first, or else the build will fail.
+        component: path.resolve(`./src/templates/${layout || 'post'}.tsx`),
+        context: {
+          // Data passed to context is available in page queries as GraphQL variables.
+          slug,
+          prev,
+          next,
+          primaryTag: node.frontmatter.tags ? node.frontmatter.tags[0] : '',
+          lang,
+          translationPath,
+        },
+      });
     });
   });
 
   // Create tag pages
   const tagTemplate = path.resolve('./src/templates/tags.tsx');
-  const tags = _.uniq(
-    _.flatten(
-      result.data.allMarkdownRemark.edges.map(edge => {
-        return _.castArray(_.get(edge, 'node.frontmatter.tags', []));
-      }),
-    ),
-  );
-  tags.forEach(tag => {
-    createPage({
-      path: `/tags/${_.kebabCase(tag)}/`,
-      component: tagTemplate,
-      context: {
-        tag,
-      },
+  LANGS.forEach(lang => {
+    const tags = _.uniq(
+      _.flatten(
+        postsByLang[lang].map(edge => {
+          return _.castArray(_.get(edge, 'node.frontmatter.tags', []));
+        }),
+      ),
+    );
+    tags.forEach(tag => {
+      createPage({
+        path: `/${lang}/tags/${_.kebabCase(tag)}/`,
+        component: tagTemplate,
+        context: {
+          tag,
+          lang,
+        },
+      });
     });
   });
 
   // Create author pages
   const authorTemplate = path.resolve('./src/templates/author.tsx');
-  result.data.allAuthorYaml.edges.forEach(edge => {
-    createPage({
-      path: `/author/${_.kebabCase(edge.node.name)}/`,
-      component: authorTemplate,
-      context: {
-        author: edge.node.name,
-      },
+  LANGS.forEach(lang => {
+    result.data.allAuthorYaml.edges.forEach(edge => {
+      createPage({
+        path: `/${lang}/author/${_.kebabCase(edge.node.name)}/`,
+        component: authorTemplate,
+        context: {
+          author: edge.node.name,
+          lang,
+        },
+      });
     });
   });
 };

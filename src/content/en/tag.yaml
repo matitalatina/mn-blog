@@ -1,0 +1,10 @@
+- name: Dev
+  lang: en
+  translationKey: dev
+  description: My job, my passion.
+  image: ../img/tags/dev.jpg
+- name: How-to
+  lang: en
+  translationKey: how-to
+  description: When something is bad, keep it for you; when it's good, share it.
+  image: ../img/tags/books.jpg

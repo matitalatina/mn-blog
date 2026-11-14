@@ -9,6 +9,8 @@ import SiteNav from '../components/header/SiteNav';
 import { PostCard } from '../components/PostCard';
 import { SiteHead } from '../components/SiteHead';
 import { Wrapper } from '../components/Wrapper';
+import { useI18n } from '../i18n/LanguageProvider';
+import { otherLang, type Lang } from '../i18n/config';
 import IndexLayout from '../layouts';
 import {
   AuthorProfileImage,
@@ -29,6 +31,9 @@ import config from '../website-config';
 
 interface AuthorTemplateProps {
   location: Location;
+  pageContext: {
+    lang: Lang;
+  };
   data: {
     logo: {
       childImageSharp: {
@@ -64,6 +69,7 @@ interface AuthorTemplateProps {
 }
 
 const Author = ({ data }: AuthorTemplateProps) => {
+  const { t } = useI18n();
   const author = data.authorYaml;
 
   const edges = data.allMarkdownRemark.edges.filter(edge => {
@@ -115,9 +121,7 @@ const Author = ({ data }: AuthorTemplateProps) => {
                       </div>
                     )}
                     <div className="author-stats" css={[HiddenMobile]}>
-                      {totalCount > 1 && `${totalCount} posts`}
-                      {totalCount === 1 && '1 post'}
-                      {totalCount === 0 && 'No posts'}
+                      {totalCount > 0 ? t.postsCount(totalCount) : t.noPosts}
                     </div>
                     {author.website && (
                       <AuthorSocialLink className="author-social-link">
@@ -126,7 +130,7 @@ const Author = ({ data }: AuthorTemplateProps) => {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Website
+                          {t.website}
                         </AuthorSocialLinkAnchor>
                       </AuthorSocialLink>
                     )}
@@ -137,7 +141,7 @@ const Author = ({ data }: AuthorTemplateProps) => {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Twitter
+                          {t.twitter}
                         </AuthorSocialLinkAnchor>
                       </AuthorSocialLink>
                     )}
@@ -148,7 +152,7 @@ const Author = ({ data }: AuthorTemplateProps) => {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Facebook
+                          {t.facebook}
                         </AuthorSocialLinkAnchor>
                       </AuthorSocialLink>
                     )}
@@ -176,8 +180,10 @@ const Author = ({ data }: AuthorTemplateProps) => {
 export const Head = ({
   data,
   location,
-}: Pick<AuthorTemplateProps, 'data' | 'location'>) => {
+  pageContext,
+}: Pick<AuthorTemplateProps, 'data' | 'location' | 'pageContext'>) => {
   const author = data.authorYaml;
+  const alternateLang = otherLang(pageContext.lang);
 
   return (
     <SiteHead>
@@ -191,6 +197,9 @@ export const Head = ({
       <meta property="article:publisher" content="https://www.mattianatali.it" />
       <meta property="article:author" content="https://www.mattianatali.it" />
       <meta property="og:url" content={config.siteUrl + location.pathname} />
+      <link rel="alternate" hrefLang={pageContext.lang} href={`${config.siteUrl}${location.pathname}`} />
+      <link rel="alternate" hrefLang={alternateLang} href={`${config.siteUrl}${location.pathname.replace(`/${pageContext.lang}/`, `/${alternateLang}/`)}`} />
+      <link rel="alternate" hrefLang="x-default" href={`${config.siteUrl}${pageContext.lang === 'it' ? location.pathname : location.pathname.replace(`/${pageContext.lang}/`, '/it/')}`} />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={`${author.name} - ${config.title}`} />
       <meta name="twitter:url" content={config.siteUrl + location.pathname} />
@@ -210,7 +219,7 @@ export const Head = ({
   );
 };
 
-export const pageQuery = graphql`query ($author: String) {
+export const pageQuery = graphql`query ($author: String, $lang: String!) {
   authorYaml(name: {eq: $author}) {
     id
     name
@@ -231,7 +240,7 @@ export const pageQuery = graphql`query ($author: String) {
     }
   }
   allMarkdownRemark(
-    filter: {frontmatter: {draft: {ne: true}}}
+    filter: {fields: {lang: {eq: $lang}}, frontmatter: {draft: {ne: true}}}
     sort: {frontmatter: {date: DESC}}
     limit: 2000
   ) {
