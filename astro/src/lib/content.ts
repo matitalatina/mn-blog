@@ -69,15 +69,9 @@ export interface PostData {
 
 const postCollection = (lang: Lang) => (lang === 'it' ? 'postsIt' : 'postsEn');
 
-let authorsCache: AuthorData[] | undefined;
-
 export const getAuthors = async (): Promise<AuthorData[]> => {
-  if (authorsCache) {
-    return authorsCache;
-  }
-
   const entries = await getCollection('authors');
-  authorsCache = entries.map(entry => ({
+  return entries.map(entry => ({
     id: entry.id,
     name: entry.data.name,
     bio: entry.data.bio ?? '',
@@ -88,8 +82,6 @@ export const getAuthors = async (): Promise<AuthorData[]> => {
     facebook: entry.data.facebook,
     location: entry.data.location,
   }));
-
-  return authorsCache;
 };
 
 const excerptProcessor = unified().use(remarkParse).use(remarkGfm).use(remarkSmartypants);

@@ -7,9 +7,6 @@ export type Lang = (typeof LANGS)[number];
 
 export const defaultLang: Lang = 'it';
 
-export const isLang = (value: string): value is Lang =>
-  (LANGS as readonly string[]).includes(value);
-
 export const getLangFromPath = (pathname = '/'): Lang => {
   const path = pathname.split('?')[0];
   if (path === '/en' || path.startsWith('/en/')) {

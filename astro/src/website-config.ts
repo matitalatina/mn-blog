@@ -30,7 +30,7 @@ const config: WebsiteConfig = {
   github: 'https://github.com/matitalatina/',
   showSubscribe: true,
   mailchimpAction:
-    'https://gmail.us4.list-manage.com/subscribe/post?u=a8dbd77c4662328d660883c64&amp;id=31345af945',
+    'https://gmail.us4.list-manage.com/subscribe/post?u=a8dbd77c4662328d660883c64&id=31345af945',
   mailchimpName: 'b_a8dbd77c4662328d660883c64_31345af945',
   mailchimpEmailFieldName: 'EMAIL',
   googleSiteVerification: 'GoogleCode',

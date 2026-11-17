@@ -6,7 +6,6 @@ import rehypeRaw from 'rehype-raw';
 
 import rehypeGatsbyHighlight from './src/lib/rehype-gatsby-highlight.mjs';
 import rehypeResponsiveIframe from './src/lib/rehype-responsive-iframe.mjs';
-import rehypeResponsiveImages from './src/lib/rehype-responsive-images.mjs';
 
 export default defineConfig({
   site: 'https://www.mattianatali.it',
@@ -30,20 +29,12 @@ export default defineConfig({
         [rehypePrismPlus, { ignoreMissing: true, showLineNumbers: false }],
         rehypeGatsbyHighlight,
         rehypeResponsiveIframe,
-        rehypeResponsiveImages,
       ],
     }),
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.endsWith('/rss.xml'),
-      i18n: {
-        defaultLocale: 'it',
-        locales: {
-          it: 'it-IT',
-          en: 'en-US',
-        },
-      },
+      filter: (page) => page !== 'https://www.mattianatali.it/' && !page.endsWith('/rss.xml'),
     }),
   ],
 });

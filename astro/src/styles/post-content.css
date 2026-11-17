@@ -68,6 +68,17 @@
   }
 }
 
+.post-full-content .privacy-inline-block {
+  display: block;
+  margin-bottom: 1.5em;
+}
+
+@media (max-width: 500px) {
+  .post-full-content .privacy-inline-block {
+    margin-bottom: 1.28em;
+  }
+}
+
 .post-full-content li {
   word-break: break-word;
 }
