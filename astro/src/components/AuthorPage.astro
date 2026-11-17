@@ -22,7 +22,7 @@ const posts = (await getPosts(lang)).filter(post =>
 );
 const totalCount = posts.length;
 const slug = kebabCase(author);
-const site = config.siteUrl.replace(/\/$/, '');
+const site = config.siteUrl;
 const canonicalUrl = `${site}/${lang}/author/${slug}/`;
 const alternateLang = otherLang(lang);
 const alternateUrl = `${site}/${alternateLang}/author/${slug}/`;

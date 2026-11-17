@@ -13,7 +13,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = getUi(lang);
-const site = config.siteUrl.replace(/\/$/, '');
+const site = config.siteUrl;
 const canonicalUrl = `${site}/${lang}/about/`;
 const alternates = [
   { hreflang: 'it', href: `${site}/it/about/` },

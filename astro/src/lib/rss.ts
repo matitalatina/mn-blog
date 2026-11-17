@@ -1,10 +1,10 @@
 import rss from '@astrojs/rss';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { render } from 'astro:content';
-import type { APIContext } from 'astro';
 
 import { getPosts } from './content';
-import { getUi, type Lang } from './i18n';
+import type { Lang } from './i18n';
+import { siteMeta } from './site-meta';
 import config from '../website-config';
 
 interface RssFeedOptions {
@@ -25,11 +25,11 @@ const escapeXml = (value: string): string =>
   );
 
 export const createRssGET = ({ lang }: RssFeedOptions) => {
-  return async (context: APIContext) => {
-    const { rssTitle, siteDescription } = getUi(lang);
+  return async () => {
+    const { rssTitle, siteDescription } = siteMeta[lang];
     const posts = await getPosts(lang);
     const container = await AstroContainer.create();
-    const site = (context.site ?? config.siteUrl).toString().replace(/\/$/, '');
+    const site = config.siteUrl;
     const items = await Promise.all(
       posts.map(async post => {
         const { Content } = await render(post.entry);

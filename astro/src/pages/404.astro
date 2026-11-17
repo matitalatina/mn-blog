@@ -10,7 +10,7 @@ const latest = [...itPosts, ...enPosts]
   .slice(0, 3);
 const itLatest = latest.filter(post => post.lang === 'it');
 const enLatest = latest.filter(post => post.lang === 'en');
-const site = config.siteUrl.replace(/\/$/, '');
+const site = config.siteUrl;
 ---
 
 <BaseLayout

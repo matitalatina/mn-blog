@@ -20,7 +20,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = getUi(lang);
 const content = projectsByLang[lang];
-const site = config.siteUrl.replace(/\/$/, '');
+const site = config.siteUrl;
 const canonicalUrl = `${site}/${lang}/projects/`;
 const alternates = [
   { hreflang: 'it', href: `${site}/it/projects/` },

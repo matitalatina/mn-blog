@@ -2,7 +2,8 @@
 import '../styles/global.css';
 import '../styles/post-content.css';
 import config from '../website-config';
-import { getUi, type Lang } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
+import { siteMeta } from '../lib/site-meta';
 
 interface ArticleMeta {
   publishedTime: string;
@@ -54,7 +55,7 @@ const {
   noindex = false,
 } = Astro.props;
 
-const rssTitle = getUi(lang).rssTitle;
+const rssTitle = siteMeta[lang].rssTitle;
 ---
 
 <!doctype html>

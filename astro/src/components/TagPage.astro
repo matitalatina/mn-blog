@@ -21,7 +21,7 @@ const tags = await getTags(lang);
 const tagData = tags.find(item => item.name.toLowerCase() === tag.toLowerCase());
 const tagImage = tagData?.image;
 const description = tagData?.description || t.tagCollection(totalCount);
-const site = config.siteUrl.replace(/\/$/, '');
+const site = config.siteUrl;
 const canonicalUrl = `${site}/${lang}/tags/${kebabCase(tag)}/`;
 const twitterSite = config.twitter
   ? `@${config.twitter.split('https://twitter.com/')[1]}`
