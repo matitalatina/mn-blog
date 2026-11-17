@@ -4,13 +4,11 @@ import { render } from 'astro:content';
 import type { APIContext } from 'astro';
 
 import { getPosts } from './content';
-import type { Lang } from './i18n';
+import { getUi, type Lang } from './i18n';
 import config from '../website-config';
 
 interface RssFeedOptions {
   lang: Lang;
-  title: string;
-  description: string;
 }
 
 const escapeXml = (value: string): string =>
@@ -26,11 +24,12 @@ const escapeXml = (value: string): string =>
       })[character] ?? character,
   );
 
-export const createRssGET = ({ lang, title, description }: RssFeedOptions) => {
+export const createRssGET = ({ lang }: RssFeedOptions) => {
   return async (context: APIContext) => {
+    const { rssTitle, siteDescription } = getUi(lang);
     const posts = await getPosts(lang);
     const container = await AstroContainer.create();
-    const site = config.siteUrl.replace(/\/$/, '');
+    const site = (context.site ?? config.siteUrl).toString().replace(/\/$/, '');
     const items = await Promise.all(
       posts.map(async post => {
         const { Content } = await render(post.entry);
@@ -48,9 +47,9 @@ export const createRssGET = ({ lang, title, description }: RssFeedOptions) => {
     );
 
     return rss({
-      title,
-      description,
-      site: context.site ?? config.siteUrl,
+      title: rssTitle,
+      description: siteDescription,
+      site,
       trailingSlash: false,
       xmlns: {
         dc: 'http://purl.org/dc/elements/1.1/',

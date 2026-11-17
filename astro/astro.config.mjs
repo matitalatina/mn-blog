@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import { SITE_URL } from './site.mjs';
 import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import rehypePrismPlus from 'rehype-prism-plus';
@@ -8,7 +9,7 @@ import rehypeGatsbyHighlight from './src/lib/rehype-gatsby-highlight.mjs';
 import rehypeResponsiveIframe from './src/lib/rehype-responsive-iframe.mjs';
 
 export default defineConfig({
-  site: 'https://www.mattianatali.it',
+  site: SITE_URL,
   trailingSlash: 'always',
   build: {
     format: 'directory',
@@ -34,7 +35,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => page !== 'https://www.mattianatali.it/' && !page.endsWith('/rss.xml'),
+      filter: (page) => new URL(page).pathname !== '/' && !page.endsWith('/rss.xml'),
     }),
   ],
 });

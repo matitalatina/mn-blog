@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import '../styles/post-content.css';
 import config from '../website-config';
-import type { Lang } from '../lib/i18n';
+import { getUi, type Lang } from '../lib/i18n';
 
 interface ArticleMeta {
   publishedTime: string;
@@ -54,7 +54,7 @@ const {
   noindex = false,
 } = Astro.props;
 
-const rssTitle = lang === 'it' ? 'Blog di Mattia Natali' : "Mattia Natali's Blog";
+const rssTitle = getUi(lang).rssTitle;
 ---
 
 <!doctype html>

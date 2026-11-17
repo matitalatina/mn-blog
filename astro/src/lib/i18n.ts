@@ -49,6 +49,7 @@ export const languageSwitchPath = (pathname: string, targetLang: Lang): string =
 
 export interface UiStrings {
   siteDescription: string;
+  rssTitle: string;
   navHome: string;
   navProjects: string;
   navSlides: string;
@@ -89,6 +90,7 @@ export interface UiStrings {
 
 const it: UiStrings = {
   siteDescription: 'Il mio blog personale',
+  rssTitle: 'Blog di Mattia Natali',
   navHome: 'Home',
   navProjects: 'Progetti',
   navSlides: 'Slides',
@@ -137,6 +139,7 @@ const it: UiStrings = {
 
 const en: UiStrings = {
   siteDescription: 'My technical personal blog',
+  rssTitle: "Mattia Natali's Blog",
   navHome: 'Home',
   navProjects: 'Projects',
   navSlides: 'Slides',

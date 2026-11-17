@@ -1,3 +1,5 @@
+import { SITE_URL } from '../site.mjs';
+
 export interface WebsiteConfig {
   title: string;
   description: string;
@@ -23,7 +25,7 @@ const config: WebsiteConfig = {
   coverImage: 'img/blog-cover.jpg',
   logo: 'img/ghost-logo.png',
   lang: 'it',
-  siteUrl: 'https://www.mattianatali.it',
+  siteUrl: SITE_URL,
   facebook: 'https://www.facebook.com/mattianatali.dev/',
   twitter: 'https://twitter.com/matitalatina',
   linkedin: 'https://www.linkedin.com/in/mattian/',
