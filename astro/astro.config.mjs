@@ -9,7 +9,7 @@ import rehypeGatsbyHighlight from './src/lib/rehype-gatsby-highlight.mjs';
 import rehypeResponsiveIframe from './src/lib/rehype-responsive-iframe.mjs';
 
 export default defineConfig({
-  site: SITE_URL,
+  site: SITE_URL.replace(/\/$/, ''),
   trailingSlash: 'always',
   build: {
     format: 'directory',

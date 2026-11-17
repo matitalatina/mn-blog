@@ -2,7 +2,6 @@ import { SITE_URL } from '../site.mjs';
 
 export interface WebsiteConfig {
   title: string;
-  description: string;
   coverImage?: string;
   logo: string;
   lang: string;
@@ -21,11 +20,10 @@ export interface WebsiteConfig {
 
 const config: WebsiteConfig = {
   title: 'Mattia Natali',
-  description: '',
   coverImage: 'img/blog-cover.jpg',
   logo: 'img/ghost-logo.png',
   lang: 'it',
-  siteUrl: SITE_URL,
+  siteUrl: SITE_URL.replace(/\/$/, ''),
   facebook: 'https://www.facebook.com/mattianatali.dev/',
   twitter: 'https://twitter.com/matitalatina',
   linkedin: 'https://www.linkedin.com/in/mattian/',

@@ -182,7 +182,7 @@ const en: UiStrings = {
 
 export const ui: Record<Lang, UiStrings> = { it, en };
 
-export const getUi = (lang: Lang): UiStrings => ui[lang] ?? ui[defaultLang];
+export const getUi = (lang: Lang): UiStrings => ui[lang];
 
 export const dateLocales: Record<Lang, Locale> = {
   it: itLocale,
