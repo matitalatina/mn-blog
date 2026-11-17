@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from './Footer.astro';
+import PostCard from './PostCard.astro';
+import SiteNav from './SiteNav.astro';
+import Wrapper from './Wrapper.astro';
+import config from '../website-config';
+import { getPosts, resolveContentImage } from '../lib/content';
+import { getUi, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getUi(lang);
+const posts = await getPosts(lang);
+const headerImage = resolveContentImage('img/blog-cover.jpg');
+const logo = resolveContentImage('img/ghost-logo.png');
+const site = config.siteUrl.replace(/\/$/, '');
+const canonicalUrl = `${site}/${lang}/`;
+const imageUrl = headerImage ? `${site}${headerImage.src}` : undefined;
+const twitterSite = config.twitter
+  ? `@${config.twitter.split('https://twitter.com/')[1]}`
+  : undefined;
+const alternates = [
+  { hreflang: 'it', href: `${site}/it/` },
+  { hreflang: 'en', href: `${site}/en/` },
+  { hreflang: 'x-default', href: `${site}/it/` },
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={config.title}
+  description={t.siteDescription}
+  canonicalUrl={canonicalUrl}
+  image={imageUrl}
+  imageWidth={2000}
+  imageHeight={1084}
+  ogType="website"
+  alternates={alternates}
+  twitterCard="summary_large_image"
+  twitterSite={twitterSite}
+  facebook={config.facebook}
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <Wrapper>
+    <div
+      class="outer home-header site-header-background"
+      style={headerImage ? `background-image:url('${headerImage.src}')` : undefined}
+    >
+      <div class="site-header-dim"></div>
+      <div class="inner">
+        <SiteNav lang={lang} isHome />
+        <div class="site-header-content">
+          <h1 class="site-title">
+            {
+              logo ? (
+                <img style="max-height:55px" src={logo.src} alt={config.title} />
+              ) : (
+                config.title
+              )
+            }
+          </h1>
+        </div>
+      </div>
+    </div>
+    <main id="site-main" class="site-main outer">
+      <div class="inner posts">
+        <div class="post-feed">
+          {
+            posts.map((post, index) => (
+              <PostCard post={post} large={index === 0} lang={lang} />
+            ))
+          }
+        </div>
+      </div>
+    </main>
+    <Footer lang={lang} />
+  </Wrapper>
+</BaseLayout>

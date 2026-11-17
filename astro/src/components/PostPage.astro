@@ -1,0 +1,185 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuthorList from './AuthorList.astro';
+import Footer from './Footer.astro';
+import PostContent from './PostContent.astro';
+import ReadNext from './ReadNext.astro';
+import ShareButtons from './ShareButtons.astro';
+import SiteNav from './SiteNav.astro';
+import SponsorCall from './SponsorCall.astro';
+import Subscribe from './Subscribe.astro';
+import Wrapper from './Wrapper.astro';
+import config from '../website-config';
+import {
+  getAdjacentPosts,
+  getPost,
+  getRelatedPosts,
+  getTranslations,
+  kebabCase,
+} from '../lib/content';
+import { getUi, localizedPath, otherLang, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const post = await getPost(lang, slug);
+
+if (!post) {
+  throw new Error(`Post not found: ${lang}/${slug}`);
+}
+
+const t = getUi(lang);
+const translations = await getTranslations();
+const translationPath = post.translationKey
+  ? translations[post.translationKey]?.[otherLang(lang)] ?? null
+  : null;
+const primaryTag = post.tags[0] ?? '';
+const relatedPosts = await getRelatedPosts(lang, primaryTag);
+const { prev, next } = await getAdjacentPosts(lang, post.id);
+const { Content } = await render(post.entry);
+const primaryAuthor = post.authors[0];
+const postImage = post.image;
+const site = config.siteUrl.replace(/\/$/, '');
+const canonicalUrl = `${site}${post.slug}`;
+const imageUrl = postImage ? `${site}${postImage.src}` : undefined;
+const twitterSite = config.twitter
+  ? `@${config.twitter.split('https://twitter.com/')[1]}`
+  : undefined;
+const alternateLang = otherLang(lang);
+const alternates = translationPath
+  ? [
+      { hreflang: lang, href: canonicalUrl },
+      { hreflang: alternateLang, href: `${site}${translationPath}` },
+      {
+        hreflang: 'x-default',
+        href: lang === 'it' ? canonicalUrl : `${site}${translationPath}`,
+      },
+    ]
+  : [{ hreflang: lang, href: canonicalUrl }];
+const article = {
+  publishedTime: post.date.toISOString(),
+  tags: post.tags,
+  authorName: primaryAuthor?.name ?? '',
+  label1: t.by,
+  label2: 'Filed under',
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title={post.title}
+  description={post.excerpt}
+  canonicalUrl={canonicalUrl}
+  image={imageUrl}
+  imageWidth={postImage ? 1 : undefined}
+  imageHeight={postImage ? postImage.height / postImage.width : undefined}
+  ogType="article"
+  alternates={alternates}
+  twitterCard="summary_large_image"
+  twitterSite={twitterSite}
+  twitterCreator={twitterSite}
+  facebook={config.facebook}
+  articleAuthor={config.facebook}
+  article={article}
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <Wrapper class="post-template">
+    <header class="site-header">
+      <div class="outer site-nav-main">
+        <div class="inner">
+          <SiteNav
+            lang={lang}
+            isPost
+            postTitle={post.title}
+            translationPath={translationPath}
+          />
+        </div>
+      </div>
+    </header>
+    <main id="site-main" class="site-main outer">
+      <div class="inner">
+        <article class:list={['post-full', !postImage && 'no-image']}>
+          <header class="post-full-header">
+            {
+              primaryTag && (
+                <section class="post-full-tags">
+                  <a href={localizedPath(lang, `/tags/${kebabCase(primaryTag)}/`)}>
+                    {primaryTag}
+                  </a>
+                </section>
+              )
+            }
+            <h1 class="post-full-title">{post.title}</h1>
+            <p class="post-full-custom-excerpt">{post.headerExcerpt}</p>
+            <div class="post-full-byline">
+              <section class="post-full-byline-content">
+                <AuthorList authors={post.authors} tooltip="large" lang={lang} />
+                <section class="post-full-byline-meta">
+                  <h4 class="author-name">
+                    {
+                      primaryAuthor && (
+                        <a
+                          href={localizedPath(
+                            lang,
+                            `/author/${kebabCase(primaryAuthor.name)}/`,
+                          )}
+                        >
+                          {primaryAuthor.name}
+                        </a>
+                      )
+                    }
+                  </h4>
+                  <div class="byline-meta-content">
+                    <time class="byline-meta-date" datetime={post.date.toISOString()}>
+                      {post.displayDate}
+                    </time>
+                    <span class="byline-reading-time">
+                      <span class="bull">•</span> {t.minRead(post.timeToRead)}
+                    </span>
+                  </div>
+                </section>
+              </section>
+            </div>
+          </header>
+          {
+            postImage && (
+              <figure class="post-full-image">
+                <img
+                  src={postImage.src}
+                  alt={post.title}
+                  width={postImage.width}
+                  height={postImage.height}
+                />
+              </figure>
+            )
+          }
+          <PostContent>
+            <Content />
+          </PostContent>
+          <ShareButtons
+            title={t.shareTitle(post.title)}
+            subject={t.shareSubject}
+            url={canonicalUrl}
+            twitterAuthor={config.twitter?.match(/([^/]*)\/*$/)?.[1]}
+            tags={post.tags}
+          />
+          <SponsorCall lang={lang} />
+          {config.showSubscribe && <Subscribe lang={lang} />}
+        </article>
+      </div>
+    </main>
+    <ReadNext
+      tags={post.tags}
+      currentPageSlug={post.slug}
+      relatedPosts={relatedPosts}
+      prev={prev}
+      next={next}
+      lang={lang}
+    />
+    <Footer lang={lang} />
+  </Wrapper>
+</BaseLayout>

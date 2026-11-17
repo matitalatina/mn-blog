@@ -1,0 +1,33 @@
+---
+import { getUi, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getUi(lang);
+---
+
+<section class="hero">
+  <h3 class="hero-title">{t.sponsorTitle}</h3>
+  <p>{t.sponsorDescription}</p>
+  <div class="btn-group">
+    <a
+      class="btn"
+      href="https://www.buymeacoffee.com/mattianatali"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {t.buyCoffee}
+    </a>
+    <a
+      class="btn btn-pink"
+      href="https://github.com/sponsors/matitalatina"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {t.becomeSponsor}
+    </a>
+  </div>
+</section>

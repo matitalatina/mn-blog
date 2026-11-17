@@ -1,0 +1,54 @@
+---
+import { kebabCase, type PostData } from '../lib/content';
+import { getUi, localizedPath, type Lang } from '../lib/i18n';
+
+interface Props {
+  tags: string[];
+  currentPageSlug: string;
+  relatedPosts: { totalCount: number; posts: PostData[] };
+  lang: Lang;
+}
+
+const { tags, currentPageSlug, relatedPosts, lang } = Astro.props;
+const t = getUi(lang);
+const tag = tags[0] ?? '';
+const tagPath = localizedPath(lang, `/tags/${kebabCase(tag)}/`);
+const posts = relatedPosts.posts
+  .filter(post => post.slug !== currentPageSlug)
+  .slice(0, 3);
+---
+
+<article class="read-next-card">
+  <header class="read-next-card-header">
+    <h3>
+      <span>{t.moreIn}</span>{' '}
+      <a href={tagPath}>{tag}</a>
+    </h3>
+  </header>
+  <div class="read-next-card-content">
+    <ul>
+      {
+        posts.map(post => (
+          <li>
+            <h4>
+              <a href={post.slug}>{post.title}</a>
+            </h4>
+            <div class="read-next-card-meta">
+              <p>
+                <time datetime={post.datetime}>{post.displayDate}</time> -{' '}
+                {t.minRead(post.timeToRead)}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href={tagPath}>
+      {relatedPosts.totalCount > 1 && t.seeAllPosts(relatedPosts.totalCount)}
+      {relatedPosts.totalCount === 1 && t.onePost}
+      {relatedPosts.totalCount === 0 && t.noPosts} →
+    </a>
+  </footer>
+</article>

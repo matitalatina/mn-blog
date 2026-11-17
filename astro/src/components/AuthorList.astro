@@ -1,0 +1,53 @@
+---
+import { kebabCase, type AuthorData } from '../lib/content';
+import { getUi, localizedPath, type Lang } from '../lib/i18n';
+
+interface Props {
+  authors: AuthorData[];
+  tooltip: 'small' | 'large';
+  lang: Lang;
+}
+
+const { authors, tooltip, lang } = Astro.props;
+const t = getUi(lang);
+---
+
+<ul class="author-list">
+  {
+    authors.map(author => {
+      const authorPath = localizedPath(lang, `/author/${kebabCase(author.name)}/`);
+      return (
+        <li class="author-list-item">
+          {tooltip === 'small' && (
+            <div class="author-name-tooltip">{author.name}</div>
+          )}
+          {tooltip === 'large' && (
+            <div class="author-card">
+              <img
+                class="author-profile-image"
+                src={author.avatar.src}
+                alt={author.name}
+              />
+              <div class="author-info">
+                <div class="bio">
+                  <h2>{author.name}</h2>
+                  <p>{author.bio}</p>
+                  <p>
+                    <a href={authorPath}>{t.morePosts}</a> {t.by} {author.name}.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          <a class="author-avatar" href={authorPath}>
+            <img
+              class="author-profile-image"
+              src={author.avatar.src}
+              alt={author.name}
+            />
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>

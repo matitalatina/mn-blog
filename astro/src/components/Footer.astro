@@ -1,0 +1,42 @@
+---
+import config from '../website-config';
+import { getUi, localizedPath, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getUi(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="outer site-footer">
+  <div class="inner site-footer-content">
+    <section class="copyright">
+      <a href={localizedPath(lang, '/')}>{config.title}</a> &copy; {year}
+      {
+        config.footer && (
+          <a href={localizedPath(lang, '/')}>| {config.title} {config.footer}</a>
+        )
+      }
+    </section>
+    <nav class="site-footer-nav">
+      <a href={localizedPath(lang, '/')}>{t.footerLatestPosts}</a>
+      {
+        config.linkedin && (
+          <a href={config.linkedin} target="_blank" rel="noopener noreferrer">
+            LinkedIn
+          </a>
+        )
+      }
+      {
+        config.github && (
+          <a href={config.github} target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+        )
+      }
+    </nav>
+  </div>
+</footer>

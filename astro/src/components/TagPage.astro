@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from './Footer.astro';
+import PostCard from './PostCard.astro';
+import SiteNav from './SiteNav.astro';
+import Wrapper from './Wrapper.astro';
+import config from '../website-config';
+import { getPosts, getTags, kebabCase } from '../lib/content';
+import { getUi, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  tag: string;
+}
+
+const { lang, tag } = Astro.props;
+const t = getUi(lang);
+const posts = (await getPosts(lang)).filter(post => post.tags.includes(tag));
+const totalCount = posts.length;
+const tags = await getTags(lang);
+const tagData = tags.find(item => item.name.toLowerCase() === tag.toLowerCase());
+const tagImage = tagData?.image;
+const description = tagData?.description || t.tagCollection(totalCount);
+const site = config.siteUrl.replace(/\/$/, '');
+const canonicalUrl = `${site}/${lang}/tags/${kebabCase(tag)}/`;
+const twitterSite = config.twitter
+  ? `@${config.twitter.split('https://twitter.com/')[1]}`
+  : undefined;
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${tag} - ${config.title}`}
+  description={tagData?.description ?? ''}
+  canonicalUrl={canonicalUrl}
+  ogType="website"
+  twitterCard="summary_large_image"
+  twitterSite={twitterSite}
+  facebook={config.facebook}
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <Wrapper>
+    <header class="site-archive-header">
+      <div class="outer site-nav-main">
+        <div class="inner">
+          <SiteNav lang={lang} />
+        </div>
+      </div>
+      <div
+        class:list={[
+          'outer site-header-background',
+          tagImage ? 'has-image' : 'no-background',
+        ]}
+        style={tagImage ? `background-image:url('${tagImage.src}')` : undefined}
+      >
+        <div class="inner site-header-content">
+          <h1 class="site-title">{tag}</h1>
+          <h2 class="site-description">{description}</h2>
+        </div>
+      </div>
+    </header>
+    <main id="site-main" class="site-main outer">
+      <div class="inner">
+        <div class="post-feed">
+          {posts.map(post => <PostCard post={post} lang={lang} />)}
+        </div>
+      </div>
+    </main>
+    <Footer lang={lang} />
+  </Wrapper>
+</BaseLayout>

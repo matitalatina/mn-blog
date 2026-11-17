@@ -1,0 +1,40 @@
+---
+import PostCard from './PostCard.astro';
+import SiteNav from './SiteNav.astro';
+import Wrapper from './Wrapper.astro';
+import type { PostData } from '../lib/content';
+import { getUi, localizedPath, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  posts: PostData[];
+  hidden?: boolean;
+}
+
+const { lang, posts, hidden = false } = Astro.props;
+const t = getUi(lang);
+---
+
+<div data-notfound={lang} hidden={hidden}>
+  <Wrapper>
+    <header class="site-header">
+      <div class="outer site-nav-main">
+        <div class="inner">
+          <SiteNav lang={lang} />
+        </div>
+      </div>
+    </header>
+    <main id="site-main" class="site-main error-content">
+      <div class="inner">
+        <section style="text-align:center">
+          <h1 class="error-code">404</h1>
+          <p class="error-description">{t.notFound}</p>
+          <a class="error-link" href={localizedPath(lang, '/')}>{t.backHome}</a>
+        </section>
+        <div class="post-feed">
+          {posts.map(post => <PostCard post={post} lang={lang} useAutoExcerpt />)}
+        </div>
+      </div>
+    </main>
+  </Wrapper>
+</div>

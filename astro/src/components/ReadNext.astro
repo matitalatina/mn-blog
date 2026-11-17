@@ -1,0 +1,37 @@
+---
+import PostCard from './PostCard.astro';
+import ReadNextCard from './ReadNextCard.astro';
+import type { PostData } from '../lib/content';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  tags: string[];
+  currentPageSlug: string;
+  relatedPosts: { totalCount: number; posts: PostData[] };
+  prev?: PostData;
+  next?: PostData;
+  lang: Lang;
+}
+
+const { tags, currentPageSlug, relatedPosts, prev, next, lang } = Astro.props;
+const showRelatedPosts = relatedPosts.totalCount > 1;
+---
+
+<aside class="read-next outer">
+  <div class="inner">
+    <div class="read-next-feed">
+      {
+        showRelatedPosts && (
+          <ReadNextCard
+            tags={tags}
+            currentPageSlug={currentPageSlug}
+            relatedPosts={relatedPosts}
+            lang={lang}
+          />
+        )
+      }
+      {prev && <PostCard post={prev} lang={lang} />}
+      {next && <PostCard post={next} lang={lang} />}
+    </div>
+  </div>
+</aside>

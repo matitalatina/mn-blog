@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from './Footer.astro';
+import PostCard from './PostCard.astro';
+import SiteNav from './SiteNav.astro';
+import Wrapper from './Wrapper.astro';
+import config from '../website-config';
+import { getAuthors, getPosts, kebabCase } from '../lib/content';
+import { getUi, otherLang, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  author: string;
+}
+
+const { lang, author } = Astro.props;
+const t = getUi(lang);
+const authors = await getAuthors();
+const authorData = authors.find(item => item.name === author);
+const posts = (await getPosts(lang)).filter(post =>
+  post.authors.some(item => item.name === author),
+);
+const totalCount = posts.length;
+const slug = kebabCase(author);
+const site = config.siteUrl.replace(/\/$/, '');
+const canonicalUrl = `${site}/${lang}/author/${slug}/`;
+const alternateLang = otherLang(lang);
+const alternateUrl = `${site}/${alternateLang}/author/${slug}/`;
+const twitterSite = config.twitter
+  ? `@${config.twitter.split('https://twitter.com/')[1]}`
+  : undefined;
+const alternates = [
+  { hreflang: lang, href: canonicalUrl },
+  { hreflang: alternateLang, href: alternateUrl },
+  {
+    hreflang: 'x-default',
+    href: lang === 'it' ? canonicalUrl : `${site}/it/author/${slug}/`,
+  },
+];
+const profileImage = authorData?.profileImage;
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${author} - ${config.title}`}
+  description={authorData?.bio}
+  canonicalUrl={canonicalUrl}
+  ogType="profile"
+  alternates={alternates}
+  twitterCard="summary"
+  twitterSite={twitterSite}
+  twitterCreator={twitterSite}
+  facebook="https://www.mattianatali.it"
+  articleAuthor="https://www.mattianatali.it"
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <Wrapper>
+    <header class="site-archive-header">
+      <div class="outer site-nav-main">
+        <div class="inner">
+          <SiteNav lang={lang} />
+        </div>
+      </div>
+      <div
+        class:list={[
+          'outer site-header-background',
+          profileImage ? 'has-image' : 'no-background',
+        ]}
+        style={profileImage ? `background-image:url('${profileImage.src}')` : undefined}
+      >
+        <div class="inner">
+          <div class="site-header-content author-header">
+            {
+              authorData?.avatar && (
+                <img
+                  class="author-profile-image author-profile-bio-image"
+                  style="margin-top:8px"
+                  src={authorData.avatar.src}
+                  alt={author}
+                />
+              )
+            }
+            <div class="author-header-content">
+              <h1 class="site-title">{author}</h1>
+              {authorData?.bio && <h2 class="author-bio">{authorData.bio}</h2>}
+              <div class="author-meta">
+                {
+                  authorData?.location && (
+                    <div class="author-location author-location-hidden">
+                      {authorData.location}
+                    </div>
+                  )
+                }
+                <div class="author-stats author-location-hidden">
+                  {totalCount > 0 ? t.postsCount(totalCount) : t.noPosts}
+                </div>
+                {
+                  authorData?.website && (
+                    <span class="author-social-link">
+                      <a
+                        href={authorData.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t.website}
+                      </a>
+                    </span>
+                  )
+                }
+                {
+                  authorData?.twitter && (
+                    <span class="author-social-link">
+                      <a
+                        href={`https://twitter.com/${authorData.twitter}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t.twitter}
+                      </a>
+                    </span>
+                  )
+                }
+                {
+                  authorData?.facebook && (
+                    <span class="author-social-link">
+                      <a
+                        href={`https://www.facebook.com/${authorData.facebook}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t.facebook}
+                      </a>
+                    </span>
+                  )
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main id="site-main" class="site-main outer">
+      <div class="inner">
+        <div class="post-feed">
+          {posts.map(post => <PostCard post={post} lang={lang} />)}
+        </div>
+      </div>
+    </main>
+    <Footer lang={lang} />
+  </Wrapper>
+</BaseLayout>

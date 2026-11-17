@@ -1,0 +1,49 @@
+---
+import SubscribeForm from './SubscribeForm.astro';
+import config from '../website-config';
+import { resolveContentImage } from '../lib/content';
+import { getUi, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getUi(lang);
+const logo = resolveContentImage('img/ghost-logo.png');
+---
+
+<div class="subscribe-overlay" data-subscribe-overlay>
+  <a class="subscribe-overlay-close" data-subscribe-close></a>
+  <div class="subscribe-overlay-content">
+    {logo && <img class="subscribe-overlay-logo" src={logo.src} alt={config.title} />}
+    <h1 class="subscribe-overlay-title">{t.subscribeTitle}</h1>
+    <p class="subscribe-overlay-description">{t.subscribeDescription}</p>
+    <SubscribeForm lang={lang} />
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-subscribe-overlay]').forEach((overlay) => {
+    const openers = document.querySelectorAll('[data-subscribe-open]');
+    const close = overlay.querySelector('[data-subscribe-close]');
+
+    openers.forEach((opener) => {
+      opener.addEventListener('click', (event) => {
+        event.preventDefault();
+        overlay.classList.add('open');
+      });
+    });
+
+    close?.addEventListener('click', (event) => {
+      event.preventDefault();
+      overlay.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        overlay.classList.remove('open');
+      }
+    });
+  });
+</script>

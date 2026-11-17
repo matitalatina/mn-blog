@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from './Footer.astro';
+import PostContent from './PostContent.astro';
+import SiteNav from './SiteNav.astro';
+import Wrapper from './Wrapper.astro';
+import config from '../website-config';
+import fontanelleImage from '../images/projects/fontanelle.jpg?url';
+import squizlyImage from '../images/projects/squizly.gif?url';
+import gaslowImage from '../images/projects/gaslow.png?url';
+import metextImage from '../images/projects/metext.png?url';
+import pricemetImage from '../images/projects/pricemet.png?url';
+import randommetImage from '../images/projects/randommet.png?url';
+import { getUi, projectsByLang, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getUi(lang);
+const content = projectsByLang[lang];
+const site = config.siteUrl.replace(/\/$/, '');
+const canonicalUrl = `${site}/${lang}/projects/`;
+const alternates = [
+  { hreflang: 'it', href: `${site}/it/projects/` },
+  { hreflang: 'en', href: `${site}/en/projects/` },
+  { hreflang: 'x-default', href: `${site}/it/projects/` },
+];
+const projectImages = [
+  { alt: 'Fontanelle in Italia', src: fontanelleImage },
+  { alt: 'Squizly', src: squizlyImage },
+  { alt: 'GasLow', src: gaslowImage },
+  { alt: 'Metext | OCR', src: metextImage },
+  { alt: 'PriceMet', src: pricemetImage },
+  { alt: 'RandomMet 2', src: randommetImage },
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.projectsHeadTitle}
+  canonicalUrl={canonicalUrl}
+  ogType="website"
+  alternates={alternates}
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <Wrapper class="page-template">
+    <header class="site-archive-header no-image">
+      <div class="outer site-nav-main">
+        <div class="inner">
+          <SiteNav lang={lang} />
+        </div>
+      </div>
+    </header>
+    <main id="site-main" class="site-main outer">
+      <div class="inner">
+        <article class="post page no-image">
+          <header class="post-full-header" style="padding-top:4rem;padding-bottom:4rem">
+            <h1 class="post-full-title">{t.projectsTitle}</h1>
+          </header>
+          <PostContent class="post-content">
+            <p>{content.intro}</p>
+            {
+              content.items.map((project, index) => (
+                <>
+                  {index > 0 && <hr class="project-divider" />}
+                  <div class="project-item">
+                    <div class="project-content">
+                      <img
+                        class="project-image"
+                        src={projectImages[index].src}
+                        alt={projectImages[index].alt}
+                      />
+                      <div class="project-info">
+                        <h2 class="project-title">{project.name}</h2>
+                        <p class="project-description">{project.description}</p>
+                        <div class="project-links">
+                          {project.links.map(link => (
+                            <a
+                              class="project-link"
+                              href={link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ))
+            }
+          </PostContent>
+        </article>
+      </div>
+    </main>
+    <Footer lang={lang} />
+  </Wrapper>
+</BaseLayout>

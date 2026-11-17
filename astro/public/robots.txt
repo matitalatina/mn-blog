@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.mattianatali.it/sitemap-index.xml
+Host: https://www.mattianatali.it

@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import config from '../website-config';
+
+const site = config.siteUrl.replace(/\/$/, '');
+const alternates = [
+  { hreflang: 'it', href: `${site}/it/` },
+  { hreflang: 'en', href: `${site}/en/` },
+  { hreflang: 'x-default', href: `${site}/it/` },
+];
+---
+
+<BaseLayout
+  lang="it"
+  title="Mattia Natali"
+  canonicalUrl={`${site}/`}
+  ogType="website"
+  alternates={alternates}
+  noindex
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <div style="padding:2rem;font-family:sans-serif">
+    <a href="/it/">Italiano</a> · <a href="/en/">English</a>
+  </div>
+  <script is:inline>
+    const language = (navigator.languages?.[0] || navigator.language || '').toLowerCase();
+    window.location.replace(language.startsWith('en') ? '/en/' : '/it/');
+  </script>
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import SubscribeForm from './SubscribeForm.astro';
+import { getUi, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getUi(lang);
+---
+
+<section class="hero">
+  <h3 class="hero-title">{t.subscribeTitle}</h3>
+  <p>{t.subscribeDescription}</p>
+  <SubscribeForm lang={lang} />
+</section>

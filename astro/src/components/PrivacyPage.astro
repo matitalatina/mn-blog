@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from './Footer.astro';
+import PostContent from './PostContent.astro';
+import SiteNav from './SiteNav.astro';
+import Wrapper from './Wrapper.astro';
+import config from '../website-config';
+import { getLangFromPath } from '../lib/i18n';
+
+interface Props {
+  title: string;
+  path: string;
+}
+
+const { title, path } = Astro.props;
+const lang = getLangFromPath(path);
+const site = config.siteUrl.replace(/\/$/, '');
+const canonicalUrl = `${site}${path}`;
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  canonicalUrl={canonicalUrl}
+  ogType="website"
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <Wrapper class="privacy-template">
+    <header class="site-archive-header no-image">
+      <div class="outer site-nav-main">
+        <div class="inner">
+          <SiteNav lang={lang} />
+        </div>
+      </div>
+    </header>
+    <main id="site-main" class="site-main outer">
+      <div class="inner">
+        <article class="post page no-image">
+          <header class="post-full-header">
+            <h1 class="post-full-title">{title}</h1>
+          </header>
+          <PostContent class="post-content">
+            <slot />
+          </PostContent>
+        </article>
+      </div>
+    </main>
+    <Footer lang={lang} />
+  </Wrapper>
+</BaseLayout>

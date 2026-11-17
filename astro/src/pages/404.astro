@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NotFoundBody from '../components/NotFoundBody.astro';
+import config from '../website-config';
+import { getPosts } from '../lib/content';
+
+const [itPosts, enPosts] = await Promise.all([getPosts('it'), getPosts('en')]);
+const latest = [...itPosts, ...enPosts]
+  .sort((a, b) => b.date.getTime() - a.date.getTime())
+  .slice(0, 3);
+const itLatest = latest.filter(post => post.lang === 'it');
+const enLatest = latest.filter(post => post.lang === 'en');
+const site = config.siteUrl.replace(/\/$/, '');
+---
+
+<BaseLayout
+  lang="it"
+  title="404"
+  canonicalUrl={`${site}/404.html`}
+  ogType="website"
+  googleSiteVerification={config.googleSiteVerification}
+>
+  <NotFoundBody lang="it" posts={itLatest} />
+  <NotFoundBody lang="en" posts={enLatest} hidden />
+  <script is:inline>
+    const isEn = location.pathname.startsWith('/en');
+    document.documentElement.lang = isEn ? 'en' : 'it';
+    document.querySelectorAll('[data-notfound]').forEach(el => {
+      el.hidden = el.dataset.notfound !== (isEn ? 'en' : 'it');
+    });
+  </script>
+</BaseLayout>

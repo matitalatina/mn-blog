@@ -3,7 +3,11 @@
 # =========================
 
 # Build directory
-public/
+/public/
+
+# Astro build output
+astro/dist/
+astro/.astro/
 
 # Gatsby cache
 .cache/

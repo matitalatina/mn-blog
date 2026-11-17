@@ -1,0 +1,16 @@
+---
+import AuthorPage from '../../../components/AuthorPage.astro';
+import { getAuthorPaths } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const authors = await getAuthorPaths();
+  return authors.map(({ author, slug }) => ({
+    params: { author: slug },
+    props: { author },
+  }));
+}
+
+const { author } = Astro.props;
+---
+
+<AuthorPage lang="en" author={author} />

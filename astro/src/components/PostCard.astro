@@ -1,0 +1,73 @@
+---
+import AuthorList from './AuthorList.astro';
+import { kebabCase, type PostData } from '../lib/content';
+import { getUi, localizedPath, type Lang } from '../lib/i18n';
+
+interface Props {
+  post: PostData;
+  large?: boolean;
+  lang: Lang;
+  useAutoExcerpt?: boolean;
+}
+
+const { post, large = false, lang, useAutoExcerpt = false } = Astro.props;
+const excerpt = useAutoExcerpt ? post.autoExcerpt : post.excerpt;
+const t = getUi(lang);
+---
+
+<article
+  class:list={[
+    'post-card',
+    !post.image && 'no-image',
+    large && 'post-card-large',
+  ]}
+>
+  {
+    post.image && (
+      <a class="post-card-image-link" href={post.slug}>
+        <div class="post-card-image">
+          <img
+            src={post.image.src}
+            alt={`${post.title} cover image`}
+          />
+        </div>
+      </a>
+    )
+  }
+  <div class="post-card-content">
+    <a class="post-card-content-link" href={post.slug}>
+      <header class="post-card-header">
+        {
+          post.tags.length > 0 && (
+            <div class="post-card-primary-tag">{post.tags[0]}</div>
+          )
+        }
+        <h2 class="post-card-title">{post.title}</h2>
+      </header>
+      <section class="post-card-excerpt">
+        <p>{excerpt}</p>
+      </section>
+    </a>
+    <footer class="post-card-meta">
+      <AuthorList authors={post.authors} tooltip="small" lang={lang} />
+      <div class="post-card-byline-content">
+        <span>
+          {
+            post.authors.map((author, index) => (
+              <>
+                <a href={localizedPath(lang, `/author/${kebabCase(author.name)}/`)}>
+                  {author.name}
+                </a>
+                {post.authors.length - 1 > index && ', '}
+              </>
+            ))
+          }
+        </span>
+        <span class="post-card-byline-date">
+          <time datetime={post.datetime}>{post.displayDate}</time>{' '}
+          <span class="bull">•</span> {t.minRead(post.timeToRead)}
+        </span>
+      </div>
+    </footer>
+  </div>
+</article>
