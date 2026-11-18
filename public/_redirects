@@ -1,15 +1,15 @@
 # Old English domain -> canonical www site (keep above generic rules)
-blog.mattianatali.dev/  https://www.mattianatali.it/en/  301!
-blog.mattianatali.dev/rss.xml  https://www.mattianatali.it/en/rss.xml  301!
-blog.mattianatali.dev/sitemap-index.xml  https://www.mattianatali.it/sitemap-index.xml  301!
-blog.mattianatali.dev/sitemap-0.xml  https://www.mattianatali.it/sitemap-0.xml  301!
-blog.mattianatali.dev/gaslow/privacy-policy/  https://www.mattianatali.it/gaslow/privacy-policy/  301!
-blog.mattianatali.dev/metext/privacy-policy/  https://www.mattianatali.it/metext/privacy-policy/  301!
-blog.mattianatali.dev/randommet/privacy-policy/  https://www.mattianatali.it/randommet/privacy-policy/  301!
-blog.mattianatali.dev/projects  https://www.mattianatali.it/en/projects/  301!
-blog.mattianatali.dev/about  https://www.mattianatali.it/en/about/  301!
-blog.mattianatali.dev/tags/:tag/  https://www.mattianatali.it/en/tags/:tag/  301!
-blog.mattianatali.dev/author/:author/  https://www.mattianatali.it/en/author/:author/  301!
+https://blog.mattianatali.dev/  https://www.mattianatali.it/en/  301!
+https://blog.mattianatali.dev/rss.xml  https://www.mattianatali.it/en/rss.xml  301!
+https://blog.mattianatali.dev/sitemap-index.xml  https://www.mattianatali.it/sitemap-index.xml  301!
+https://blog.mattianatali.dev/sitemap-0.xml  https://www.mattianatali.it/sitemap-0.xml  301!
+https://blog.mattianatali.dev/gaslow/privacy-policy/  https://www.mattianatali.it/gaslow/privacy-policy/  301!
+https://blog.mattianatali.dev/metext/privacy-policy/  https://www.mattianatali.it/metext/privacy-policy/  301!
+https://blog.mattianatali.dev/randommet/privacy-policy/  https://www.mattianatali.it/randommet/privacy-policy/  301!
+https://blog.mattianatali.dev/projects  https://www.mattianatali.it/en/projects/  301!
+https://blog.mattianatali.dev/about  https://www.mattianatali.it/en/about/  301!
+https://blog.mattianatali.dev/tags/:tag/  https://www.mattianatali.it/en/tags/:tag/  301!
+https://blog.mattianatali.dev/author/:author/  https://www.mattianatali.it/en/author/:author/  301!
 
 # Root: detect browser language
 /  /en/  302!  Language=en
