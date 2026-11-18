@@ -12,10 +12,10 @@ Task:
 - Read all three reports and inspect the actual files as needed.
 - For every finding, decide APPLY or REJECT.
 - APPLY only changes that are small, safe, verifiable, and either fix a genuine bug or remove real fragility without changing behavior.
-- REJECT large refactors, cosmetic churn, new tooling, CI/production changes, and anything that would break verified URL or pixel parity unless the caller explicitly asked to break parity to fix a bug.
+- REJECT large refactors, cosmetic churn, new tooling, CI/production changes, and anything that would change public URLs or rendered output unless the caller explicitly asked for that change.
 
 Hard constraints unless explicitly overridden by the caller:
-- Preserve exact URLs and pixel-perfect visual parity with the existing built site.
+- Preserve the live site's existing URLs and rendered output unless the caller explicitly asks for a change.
 - No CI, Netlify, or production/deployment changes.
 - No secrets committed.
 

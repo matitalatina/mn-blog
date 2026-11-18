@@ -14,7 +14,7 @@ Task:
 - Prefer minimal, low-risk fixes. Ignore pure cosmetics, large refactors, and new tooling unless they remove a real correctness risk.
 
 Hard constraints unless the caller explicitly overrides them:
-- Preserve exact URLs and pixel-perfect visual parity with the existing built site.
+- Preserve the live site's existing URLs and rendered output unless the caller explicitly asks for a change.
 - Do not propose CI, Netlify, or production/deployment changes.
 - Do not propose changes that would alter committed content or generated metadata unless they fix a real bug.
 

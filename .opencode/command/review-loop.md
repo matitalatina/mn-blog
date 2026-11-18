@@ -20,15 +20,15 @@ For each round, up to the max:
 2. Decide: launch `review-decider` with all three reports and the same context. It must return APPLY/REJECT with exact minimal changes.
 3. If the decider says there are no APPLY items or no useful safe change remains, stop the loop.
 4. Apply each APPLY item yourself using the smallest possible edits. Do not make unrequested refactors.
-5. Verify: run the project's check and build commands (for this repo: `npm --prefix astro run check` and `npm --prefix astro run build`). If anything fails, fix or revert the change; never commit a broken build. If visual or URL output could be affected, verify parity against the existing built output before committing.
+5. Verify: run the project's check and build commands (for this repo: `npm run check` and `npm run build`). If anything fails, fix or revert the change; never commit a broken build. If visual or URL output could be affected, verify it against the current live site before committing.
 6. Commit the applied changes with a concise conventional commit message. If nothing was applied, stop.
 7. Re-record HEAD and repeat from step 1 on the new commit.
 
 Stop early if verification fails twice in a row, if the decider reports no useful safe change, or at the max round count.
 
 Hard constraints unless the caller explicitly overrides them in `$ARGUMENTS`:
-- Preserve exact URLs and pixel-perfect visual parity with the existing built site.
-- Fix genuine bugs even if the original had them, but say so in the commit/report.
+- Preserve the live site's existing URLs and rendered output unless the caller explicitly asks for a change.
+- Fix genuine bugs, and call out any intentional behavior change in the commit/report.
 - No CI, Netlify, or production/deployment config changes.
 - Never commit secrets or generated build output.
 

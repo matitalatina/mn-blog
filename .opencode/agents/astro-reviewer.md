@@ -14,8 +14,8 @@ Task:
 - Flag upgrade fragility and non-idiomatic patterns only when a minimal fix preserves current behavior.
 
 Hard constraints unless the caller explicitly overrides them:
-- The site must remain fully static with exact URLs and pixel-perfect visual parity.
+- The site must remain fully static; preserve the live site's existing URLs and rendered output unless the caller explicitly asks for a change.
 - No CI/Netlify/production changes.
 - Do not recommend large route restructures or wholesale refactors for cosmetic reasons.
 
-Return a prioritized list with, for each finding: file path and line number, why it is non-idiomatic or risky, severity (High/Medium/Low), and a minimal fix that preserves URLs and visuals. State explicitly if there is no new high-severity Astro issue. Research only: do NOT edit files.
+Return a prioritized list with, for each finding: file path and line number, why it is non-idiomatic or risky, severity (High/Medium/Low), and a minimal fix that preserves current URLs and rendered output. State explicitly if there is no new high-severity Astro issue. Research only: do NOT edit files.
