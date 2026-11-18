@@ -1,25 +1,18 @@
 ---
 import '../styles/global.css';
-import config from '../website-config';
+import BaseHead from '../components/BaseHead.astro';
 import type { Lang } from '../lib/i18n';
-import { siteMeta } from '../lib/site-meta';
-
-interface ArticleMeta {
-  publishedTime: string;
-  tags: string[];
-  authorName: string;
-  label1: string;
-  label2: string;
-}
+import type { ArticleMeta } from '../lib/seo';
 
 interface Props {
   lang: Lang;
   title: string;
   description?: string;
-  canonicalUrl: string;
+  canonicalUrl?: string;
   image?: string;
   imageWidth?: number;
   imageHeight?: number;
+  imageAlt?: string;
   ogType?: string;
   alternates?: { hreflang: string; href: string }[];
   twitterCard?: string;
@@ -32,76 +25,18 @@ interface Props {
   bodyClass?: string;
   noindex?: boolean;
 }
-
-const {
-  lang,
-  title,
-  description,
-  canonicalUrl,
-  image,
-  imageWidth,
-  imageHeight,
-  ogType = 'website',
-  alternates = [],
-  twitterCard = 'summary_large_image',
-  twitterSite,
-  twitterCreator,
-  facebook,
-  articleAuthor,
-  googleSiteVerification,
-  article,
-  bodyClass,
-  noindex = false,
-} = Astro.props;
-
-const rssTitle = siteMeta[lang].rssTitle;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={Astro.props.lang}>
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={rssTitle} href={`/${lang}/rss.xml`} />
-    <title>{title}</title>
-    {noindex && <meta name="robots" content="noindex" />}
-    {description !== undefined && <meta name="description" content={description} />}
-    <meta property="og:site_name" content={config.title} />
-    <meta property="og:type" content={ogType} />
-    <meta property="og:title" content={title} />
-    {description !== undefined && <meta property="og:description" content={description} />}
-    <meta property="og:url" content={canonicalUrl} />
-    {alternates.map(alternate => (
-      <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />
-    ))}
-    {image && <meta property="og:image" content={image} />}
-    {article && <meta property="article:published_time" content={article.publishedTime} />}
-    {article?.tags?.[0] && <meta property="article:tag" content={article.tags[0]} />}
-    {facebook && <meta property="article:publisher" content={facebook} />}
-    {articleAuthor && <meta property="article:author" content={articleAuthor} />}
-    <meta name="twitter:card" content={twitterCard} />
-    <meta name="twitter:title" content={title} />
-    {description !== undefined && <meta name="twitter:description" content={description} />}
-    <meta name="twitter:url" content={canonicalUrl} />
-    {image && <meta name="twitter:image" content={image} />}
-    {article && <meta name="twitter:label1" content={article.label1} />}
-    {article && <meta name="twitter:data1" content={article.authorName} />}
-    {article && <meta name="twitter:label2" content={article.label2} />}
-    {article?.tags?.[0] && <meta name="twitter:data2" content={article.tags[0]} />}
-    {twitterSite && <meta name="twitter:site" content={twitterSite} />}
-    {twitterCreator && <meta name="twitter:creator" content={twitterCreator} />}
-    {image && imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
-    {image && imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
-    {googleSiteVerification && (
-      <meta name="google-site-verification" content={googleSiteVerification} />
-    )}
+    <BaseHead {...Astro.props} />
   </head>
-  <body class={bodyClass}>
+  <body class={Astro.props.bodyClass}>
     <slot />
   </body>
 </html>

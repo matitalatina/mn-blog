@@ -6,7 +6,7 @@ import PostCard from './PostCard.astro';
 import SiteNav from './SiteNav.astro';
 import Wrapper from './Wrapper.astro';
 import config from '../website-config';
-import { getPosts, getTags, kebabCase } from '../lib/content';
+import { getPosts, getTags } from '../lib/content';
 import { getUi, type Lang } from '../lib/i18n';
 
 interface Props {
@@ -22,8 +22,6 @@ const tags = await getTags(lang);
 const tagData = tags.find(item => item.name.toLowerCase() === tag.toLowerCase());
 const tagImage = tagData?.image;
 const description = tagData?.description || t.tagCollection(totalCount);
-const site = config.siteUrl;
-const canonicalUrl = `${site}/${lang}/tags/${kebabCase(tag)}/`;
 const twitterSite = config.twitter
   ? `@${config.twitter.split('https://twitter.com/')[1]}`
   : undefined;
@@ -33,7 +31,6 @@ const twitterSite = config.twitter
   lang={lang}
   title={`${tag} - ${config.title}`}
   description={tagData?.description ?? ''}
-  canonicalUrl={canonicalUrl}
   ogType="website"
   twitterCard="summary_large_image"
   twitterSite={twitterSite}

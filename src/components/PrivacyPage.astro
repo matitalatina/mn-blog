@@ -14,14 +14,11 @@ interface Props {
 
 const { title, path } = Astro.props;
 const lang = getLangFromPath(path);
-const site = config.siteUrl;
-const canonicalUrl = `${site}${path}`;
 ---
 
 <BaseLayout
   lang={lang}
   title={title}
-  canonicalUrl={canonicalUrl}
   ogType="website"
   googleSiteVerification={config.googleSiteVerification}
 >

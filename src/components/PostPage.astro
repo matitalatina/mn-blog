@@ -45,7 +45,7 @@ const { Content } = await render(post.entry);
 const primaryAuthor = post.authors[0];
 const postImage = post.image;
 const site = config.siteUrl;
-const canonicalUrl = `${site}${post.slug}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = postImage ? `${site}${postImage.src}` : undefined;
 const twitterSite = config.twitter
   ? `@${config.twitter.split('https://twitter.com/')[1]}`

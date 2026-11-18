@@ -14,7 +14,6 @@ interface Props {
 const { lang } = Astro.props;
 const t = getUi(lang);
 const site = config.siteUrl;
-const canonicalUrl = `${site}/${lang}/about/`;
 const alternates = [
   { hreflang: 'it', href: `${site}/it/about/` },
   { hreflang: 'en', href: `${site}/en/about/` },
@@ -35,7 +34,6 @@ const content: Record<Lang, string[]> = {
 <BaseLayout
   lang={lang}
   title={t.aboutHeadTitle}
-  canonicalUrl={canonicalUrl}
   ogType="website"
   alternates={alternates}
   googleSiteVerification={config.googleSiteVerification}
