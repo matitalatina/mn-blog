@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css';
-import '../styles/post-content.css';
 import config from '../website-config';
 import type { Lang } from '../lib/i18n';
 import { siteMeta } from '../lib/site-meta';
@@ -64,7 +63,8 @@ const rssTitle = siteMeta[lang].rssTitle;
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="icon" href="/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={rssTitle} href={`/${lang}/rss.xml`} />

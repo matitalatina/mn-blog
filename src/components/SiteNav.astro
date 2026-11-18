@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import SubscribeModal from './SubscribeModal.astro';
 import config from '../website-config';
 import { resolveContentImage } from '../lib/content';
@@ -39,7 +40,13 @@ const switchPath =
     {
       !isHome && (
         <a class="site-nav-logo" href={localizedPath(lang, '/')}>
-          {logo ? <img src={logo.src} alt={config.title} /> : config.title}
+          {
+            logo ? (
+              <Image src={logo} width={110} layout="none" alt={config.title} />
+            ) : (
+              config.title
+            )
+          }
         </a>
       )
     }

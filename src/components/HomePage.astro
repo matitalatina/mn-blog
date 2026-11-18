@@ -1,4 +1,5 @@
 ---
+import { Image, Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from './Footer.astro';
 import PostCard from './PostCard.astro';
@@ -46,10 +47,19 @@ const alternates = [
   googleSiteVerification={config.googleSiteVerification}
 >
   <Wrapper>
-    <div
-      class="outer home-header site-header-background"
-      style={headerImage ? `background-image:url('${headerImage.src}')` : undefined}
-    >
+    <div class="outer home-header site-header-background">
+      {
+        headerImage && (
+          <Picture
+            src={headerImage}
+            formats={['avif', 'webp']}
+            width={1600}
+            layout="full-width"
+            alt=""
+            priority
+          />
+        )
+      }
       <div class="site-header-dim"></div>
       <div class="inner">
         <SiteNav lang={lang} isHome />
@@ -57,7 +67,13 @@ const alternates = [
           <h1 class="site-title">
             {
               logo ? (
-                <img style="max-height:55px" src={logo.src} alt={config.title} />
+                <Image
+                  style="max-height:55px;width:auto"
+                  src={logo}
+                  width={120}
+                  layout="none"
+                  alt={config.title}
+                />
               ) : (
                 config.title
               )

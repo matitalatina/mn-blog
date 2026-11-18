@@ -14,6 +14,11 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
+  image: {
+    layout: 'constrained',
+    responsiveStyles: true,
+    breakpoints: [640, 960, 1280, 1920],
+  },
   i18n: {
     defaultLocale: 'it',
     locales: ['it', 'en'],

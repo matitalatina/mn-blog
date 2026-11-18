@@ -1,16 +1,17 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from './Footer.astro';
 import PostContent from './PostContent.astro';
 import SiteNav from './SiteNav.astro';
 import Wrapper from './Wrapper.astro';
 import config from '../website-config';
-import fontanelleImage from '../images/projects/fontanelle.jpg?url';
-import squizlyImage from '../images/projects/squizly.gif?url';
-import gaslowImage from '../images/projects/gaslow.png?url';
-import metextImage from '../images/projects/metext.png?url';
-import pricemetImage from '../images/projects/pricemet.png?url';
-import randommetImage from '../images/projects/randommet.png?url';
+import fontanelleImage from '../images/projects/fontanelle.jpg';
+import squizlyImage from '../images/projects/squizly.gif';
+import gaslowImage from '../images/projects/gaslow.png';
+import metextImage from '../images/projects/metext.png';
+import pricemetImage from '../images/projects/pricemet.png';
+import randommetImage from '../images/projects/randommet.png';
 import { getUi, projectsByLang, type Lang } from '../lib/i18n';
 
 interface Props {
@@ -28,12 +29,12 @@ const alternates = [
   { hreflang: 'x-default', href: `${site}/it/projects/` },
 ];
 const projectImages = [
-  { alt: 'Fontanelle in Italia', src: fontanelleImage },
-  { alt: 'Squizly', src: squizlyImage },
-  { alt: 'GasLow', src: gaslowImage },
-  { alt: 'Metext | OCR', src: metextImage },
-  { alt: 'PriceMet', src: pricemetImage },
-  { alt: 'RandomMet 2', src: randommetImage },
+  { alt: 'Fontanelle in Italia', image: fontanelleImage },
+  { alt: 'Squizly', image: squizlyImage, animated: true },
+  { alt: 'GasLow', image: gaslowImage },
+  { alt: 'Metext | OCR', image: metextImage },
+  { alt: 'PriceMet', image: pricemetImage },
+  { alt: 'RandomMet 2', image: randommetImage },
 ];
 ---
 
@@ -67,9 +68,11 @@ const projectImages = [
                   {index > 0 && <hr class="project-divider" />}
                   <div class="project-item">
                     <div class="project-content">
-                      <img
+                      <Image
                         class="project-image"
-                        src={projectImages[index].src}
+                        src={projectImages[index].image}
+                        width={240}
+                        format={projectImages[index].animated ? 'gif' : undefined}
                         alt={projectImages[index].alt}
                       />
                       <div class="project-info">

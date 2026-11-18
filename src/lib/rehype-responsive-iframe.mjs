@@ -21,6 +21,17 @@ export default function rehypeResponsiveIframe() {
 
       delete properties.width;
       delete properties.height;
+      if (
+        typeof properties.src === 'string' &&
+        properties.src.startsWith('https://www.youtube.com/embed/')
+      ) {
+        properties.src = properties.src.replace(
+          'https://www.youtube.com/embed/',
+          'https://www.youtube-nocookie.com/embed/',
+        );
+      }
+      properties.loading ??= 'lazy';
+      properties.title ??= 'Video player';
       properties.style = 'position:absolute;top:0;left:0;width:100%;height:100%';
 
       parent.children[index] = {

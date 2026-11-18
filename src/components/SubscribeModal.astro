@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import SubscribeForm from './SubscribeForm.astro';
 import config from '../website-config';
 import { resolveContentImage } from '../lib/content';
@@ -16,7 +17,17 @@ const logo = resolveContentImage('img/ghost-logo.png');
 <div class="subscribe-overlay" data-subscribe-overlay>
   <a class="subscribe-overlay-close" data-subscribe-close></a>
   <div class="subscribe-overlay-content">
-    {logo && <img class="subscribe-overlay-logo" src={logo.src} alt={config.title} />}
+    {
+      logo && (
+        <Image
+          class="subscribe-overlay-logo"
+          src={logo}
+          width={110}
+          layout="none"
+          alt={config.title}
+        />
+      )
+    }
     <h1 class="subscribe-overlay-title">{t.subscribeTitle}</h1>
     <p class="subscribe-overlay-description">{t.subscribeDescription}</p>
     <SubscribeForm lang={lang} />

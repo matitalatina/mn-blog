@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import AuthorList from './AuthorList.astro';
 import { kebabCase, type PostData } from '../lib/content';
 import { getUi, localizedPath, type Lang } from '../lib/i18n';
@@ -26,9 +27,12 @@ const t = getUi(lang);
     post.image && (
       <a class="post-card-image-link" href={post.slug}>
         <div class="post-card-image">
-          <img
-            src={post.image.src}
+          <Picture
+            src={post.image}
+            formats={['avif', 'webp']}
+            width={large ? 1100 : 640}
             alt={`${post.title} cover image`}
+            priority={large}
           />
         </div>
       </a>
