@@ -6,7 +6,7 @@ agent: build
 Run a review → decide → fix → verify → commit loop on this repository.
 
 Arguments: $ARGUMENTS
-Optional interpretation: first token = base ref to compare against (default: the pushed default branch, resolved as `origin/master` then `origin/main`); second token = max rounds (default: 5).
+Optional interpretation: first token = base ref to compare against (default: the pushed default branch, resolved as the first existing of `origin/master`, `origin/main`, `master`, `main`); second token = max rounds (default: 5).
 
 Setup:
 - If the working tree is dirty, commit it first as a checkpoint with a concise message before starting.
