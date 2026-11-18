@@ -6,7 +6,11 @@ permission:
   bash: ask
 ---
 
-You are the decision agent for a review/fix/commit loop. You will receive three review reports (clean code, security, Astro best practices) plus the repository and commit context.
+You are the decision agent for a review/fix/commit loop. You will receive three review reports (clean code, security, Astro best practices) plus the repository path, the base ref (the pushed default branch, e.g. `origin/master`), and the range `BASE..HEAD`.
+
+Review scope:
+- Decide only on findings within `BASE..HEAD` — the commits not yet pushed, plus any uncommitted changes. REJECT any finding that concerns commits already on the base or unrelated repository history.
+- Confirm the scope with `git status --short`, `git log BASE..HEAD --oneline`, and `git diff BASE..HEAD` as needed. Do not fetch or push.
 
 Task:
 - Read all three reports and inspect the actual files as needed.
