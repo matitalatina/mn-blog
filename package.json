@@ -1,80 +1,43 @@
 {
-  "name": "mn-blog",
+  "name": "mn-blog-astro",
   "description": "Mattia Natali's bilingual blog",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "author": "Mattia Natali",
   "license": "MIT",
   "scripts": {
-    "build": "gatsby build",
-    "clean": "gatsby clean",
-    "dev": "gatsby develop",
-    "lint": "eslint --ext .js,.ts,.tsx .",
-    "lint:fix": "eslint --fix --ext .js,.ts,.tsx .",
-    "start": "npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "ts:check": "tsc --noEmit"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "cssnano": "^6.1.2",
+    "@astrojs/markdown-remark": "^7.3.9",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.5",
+    "astro": "^7.4.12",
     "date-fns": "^3.6.0",
-    "gatsby": "^5.16.1",
-    "gatsby-plugin-canonical-urls": "^5.16.0",
-    "gatsby-plugin-emotion": "^8.16.0",
-    "gatsby-plugin-feed": "^5.16.0",
-    "gatsby-plugin-google-gtag": "^5.16.0",
-    "gatsby-plugin-image": "^3.16.0",
-    "gatsby-plugin-postcss": "^6.16.0",
-    "gatsby-plugin-robots-txt": "^1.8.0",
-    "gatsby-plugin-sharp": "^5.16.0",
-    "gatsby-plugin-sitemap": "^6.16.0",
-    "gatsby-plugin-typescript": "^5.16.0",
-    "gatsby-remark-copy-linked-files": "^6.16.0",
-    "gatsby-remark-images": "^7.16.0",
-    "gatsby-remark-prismjs": "^7.16.0",
-    "gatsby-remark-responsive-iframe": "^6.16.0",
-    "gatsby-remark-smartypants": "^6.16.0",
-    "gatsby-source-filesystem": "^5.16.0",
-    "gatsby-transformer-json": "^5.16.0",
-    "gatsby-transformer-remark": "^6.16.0",
-    "gatsby-transformer-sharp": "^5.16.0",
-    "gatsby-transformer-yaml": "^5.16.0",
-    "lodash": "^4.18.1",
-    "normalize.css": "^8.0.1",
-    "polished": "^4.3.1",
-    "postcss-color-function": "^4.1.0",
-    "prism-themes": "^1.9.0",
-    "prismjs": "^1.30.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-emotion": "^10.0.0",
-    "react-share": "^5.1.0",
-    "rehype-react": "^7.2.0"
+    "lodash.kebabcase": "^4.1.1",
+    "lodash.words": "^4.2.0",
+    "rehype-prism-plus": "^2.0.2",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-smartypants": "^3.0.3",
+    "sharp": "^0.35.5",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.2.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.27",
-    "@types/node": "^20.19.43",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
-    "eslint-plugin-react": "^7.37.5",
+    "@astrojs/check": "^0.9.12",
+    "@types/lodash.kebabcase": "^4.1.9",
+    "@types/lodash.words": "^4.2.9",
     "typescript": "^5.9.3"
   },
-  "overrides": {
-    "lmdb": "3.5.1",
-    "react-server-dom-webpack@0.0.0-experimental-c8b778b7f-20220825": {
-      "react": "^18.0.0"
-    }
-  },
-  "browserslist": [
-    ">5%",
-    "not dead"
-  ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.23.4"
   }
 }
