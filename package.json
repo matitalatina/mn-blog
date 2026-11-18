@@ -22,7 +22,6 @@
     "date-fns": "^3.6.0",
     "lodash.kebabcase": "^4.1.1",
     "lodash.words": "^4.2.0",
-    "rehype-prism-plus": "^2.0.2",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",

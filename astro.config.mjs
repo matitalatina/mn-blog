@@ -2,10 +2,8 @@ import { defineConfig } from 'astro/config';
 import { SITE_URL } from './site.mjs';
 import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
-import rehypePrismPlus from 'rehype-prism-plus';
 import rehypeRaw from 'rehype-raw';
 
-import rehypeGatsbyHighlight from './src/lib/rehype-gatsby-highlight.mjs';
 import rehypeResponsiveIframe from './src/lib/rehype-responsive-iframe.mjs';
 
 export default defineConfig({
@@ -28,14 +26,9 @@ export default defineConfig({
     },
   },
   markdown: {
-    syntaxHighlight: false,
+    syntaxHighlight: 'prism',
     processor: unified({
-      rehypePlugins: [
-        rehypeRaw,
-        [rehypePrismPlus, { ignoreMissing: true, showLineNumbers: false }],
-        rehypeGatsbyHighlight,
-        rehypeResponsiveIframe,
-      ],
+      rehypePlugins: [rehypeRaw, rehypeResponsiveIframe],
     }),
   },
   integrations: [
